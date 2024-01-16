@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/shadcn";
 import { siteConfig } from "@/utils/site";
+import { inter } from "@/utils/fonts";
 import "./globals.css";
-
-export const fontSans = FontSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 
 export const metadata: Metadata = {
   // metadataBase: new URL(CDN_PUNK_URL), TODO:
@@ -45,7 +40,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     <html lang="en">
       <body
         suppressHydrationWarning={true}
-        className={cn(fontSans.variable, "bg-background font-sans text-foreground")}
+        className={cn(inter.className, "bg-background text-foreground")}
       >
         {children}
       </body>
