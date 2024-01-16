@@ -1,3 +1,23 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "rules": {
+    "curly": ["error", "all"],
+    "func-names": "error",
+    "function-paren-newline": "off",
+    "global-require": "off",
+    "indent": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "error",
+    "import/prefer-default-export": "off",
+    "max-len": "off",
+    "no-alert": "warn",
+    "no-confusing-arrow": "off",
+    "no-console": ["warn", { "allow": ["warn", "error", "time", "timeEnd"] }],
+    "no-unused-vars": "error",
+    "no-use-before-define": "off",
+    "object-curly-newline": "off",
+    "operator-linebreak": "off",
+    "prefer-const": "error",
+    "space-before-function-paren": "off"
+  }
 }

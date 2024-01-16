@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
-const Home: NextPage = () => {
+const AppPage: NextPage = () => {
   return <main className="">test</main>;
 };
 
-export default Home;
+export default AppPage;
