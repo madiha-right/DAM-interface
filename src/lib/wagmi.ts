@@ -3,7 +3,10 @@ import { mantle, mantleTestnet } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { getDefaultConfig } from "connectkit";
 
-const { chains, publicClient } = configureChains([mantle, mantleTestnet], [publicProvider()]);
+const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [mantle, mantleTestnet],
+  [publicProvider()],
+);
 
 // Use the configured provider and chains to create a wagmi config
 export const config = createConfig(
@@ -14,6 +17,7 @@ export const config = createConfig(
 
     chains,
     publicClient,
+    webSocketPublicClient,
 
     // Required
     appName: "DAM",

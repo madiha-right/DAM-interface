@@ -1,6 +1,6 @@
 import React from "react";
 
-const DamLogo = () => {
+const DamLogo: React.FC = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="50" height="21" viewBox="0 0 50 21" fill="none">
       <path

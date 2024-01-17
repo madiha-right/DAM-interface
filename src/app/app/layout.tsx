@@ -1,13 +1,20 @@
 import React from "react";
+import { cn } from "@/lib/shadcn";
+import { poppins } from "@/utils/fonts";
 import Providers from "@/app/app/Providers";
-import Naviagtion from "@/components/Naviagtion";
+import AppNav from "@/app/app/AppNav";
 
-const Layout: React.FC = () => {
+interface IProps {
+  children: React.ReactNode;
+}
+
+const Layout: React.FC<IProps> = ({ children }) => {
   return (
     <Providers>
-      <Naviagtion />
-      <h1>layout</h1>
-      <h2 className="text-foreground">test</h2>
+      <AppNav />
+      <div className="px-[30px] pb-[43px] pt-[21px]">
+        <main className={cn(poppins.className, "container")}>{children}</main>
+      </div>
     </Providers>
   );
 };

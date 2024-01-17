@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "DAM | Community",
-  description: "", // TODO:
+  description: "Distribution based on community gauge-voting until the end of round.", // TODO:
 };
 
 const CommunityPage: NextPage = () => {

@@ -10,6 +10,18 @@ module.exports = {
   ],
   prefix: "",
   theme: {
+    fontSize: {
+      "2xs": "0.625rem", // 10px
+      xs: "0.75rem", // 12px
+      sm: "0.875rem", // 14px
+      base: "1rem", // 16px
+      lg: "1.125rem", // 18px
+      xl: "1.25rem", // 20px
+      "2xl": "1.5rem", // 24px
+      "3xl": "1.875rem", // 30px
+      "4xl": "2.25rem", // 36px
+      "5xl": "3rem", // 48px
+    },
     container: {
       center: true,
       screens: {
@@ -18,6 +30,8 @@ module.exports = {
     },
     extend: {
       colors: {
+        destructive: "#F85149",
+        constructive: "#3FB950",
         border: "#E2E8F0",
         hover: "#E2E8F0",
         background: "#FFFFFF",
@@ -31,10 +45,15 @@ module.exports = {
           mint: "#C5E6E3",
         },
       },
+      borderWidth: {
+        md: "2px",
+        sm: "1px",
+      },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        xl: "10px",
+        lg: "8px",
+        md: "6px",
+        sm: "4px",
       },
       keyframes: {
         "accordion-down": {

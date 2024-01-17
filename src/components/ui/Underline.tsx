@@ -11,7 +11,7 @@ const Underline: React.FC<IProps> = ({ className, hasShown }) => {
     <span
       className={cn(
         hasShown ? "max-w-full" : "max-w-0",
-        "block transition-all duration-300 h-[2px] bg-mantle-teal",
+        "block h-[2px] bg-mantle-teal transition-all duration-300",
         className,
       )}
     />

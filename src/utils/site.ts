@@ -11,7 +11,7 @@ type SiteConfig = {
 };
 
 export const DAM_BASE_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://pill.punkcube.xyz";
+  process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://"; // TODO: get domain
 
 export const siteConfig: SiteConfig = {
   name: "DAM",
