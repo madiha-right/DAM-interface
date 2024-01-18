@@ -16,11 +16,8 @@ export const formatNumberWithUnit = (amount: number): string => {
 };
 
 export const formatPercentage = (value: number): string => {
-  // Format the number with two decimal places
-  let formattedValue = value.toFixed(2);
-
-  // Remove any unnecessary trailing zeroes
-  formattedValue = formattedValue.replace(/(\.0+|(?<=\.\d)0+)$/, "");
+  // Multiply by 100 and format the number with two decimal places
+  let formattedValue = (value * 100).toFixed(2);
 
   // Prefix with '+' if the number is positive
   if (value > 0) {
