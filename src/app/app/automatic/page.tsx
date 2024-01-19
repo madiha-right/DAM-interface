@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   title: "DAM | Automatic",
   description: "Distribution based on Auto-Metric until the end of the round.",
 };
+// TODO: remove it after the deployment
+export const dynamic = "force-dynamic";
 
 async function getProtocols(): Promise<ProtocolDataType[]> {
   const res = await fetch(DAM_BASE_URL + "/app/automatic/api");

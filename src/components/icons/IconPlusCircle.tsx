@@ -4,7 +4,7 @@ interface IProps {
   className?: string;
 }
 
-const PlusCircle: React.FC<IProps> = () => {
+const IconPlusCircle: React.FC<IProps> = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
       <g clipPath="url(#clip0_374_947)">
@@ -31,4 +31,4 @@ const PlusCircle: React.FC<IProps> = () => {
   );
 };
 
-export default PlusCircle;
+export default IconPlusCircle;

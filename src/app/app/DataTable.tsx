@@ -18,7 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/DropdownMenu"; // prettier-ignore
-import Menu from "@/components/icons/Menu";
+import { IconMenu } from "@/components/icons";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,7 +58,7 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                <Menu />
+                <IconMenu />
                 View
               </Button>
             </DropdownMenuTrigger>

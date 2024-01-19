@@ -2,7 +2,7 @@ import React from "react";
 
 interface IProps {}
 
-const ArrowUpRight: React.FC<IProps> = () => {
+const IconArrowUpRight: React.FC<IProps> = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="9" height="8" viewBox="0 0 9 8" fill="none">
       <rect
@@ -28,4 +28,4 @@ const ArrowUpRight: React.FC<IProps> = () => {
   );
 };
 
-export default ArrowUpRight;
+export default IconArrowUpRight;

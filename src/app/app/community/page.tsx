@@ -7,12 +7,16 @@ import { columns } from "./Columns";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card" // prettier-ignore
 import { Separator } from "@/components/ui/Seperator";
 import { Button } from "@/components/ui/Button";
-import ArrowUpRight from "@/components/icons/ArrowUpRight";
+import ProjectDrawer from "./ProjectDrawer";
+import SiteList from "./SiteList";
 
 export const metadata: Metadata = {
   title: "DAM | Community",
   description: "Distribution based on community gauge-voting until the end of round.", // TODO:
 };
+
+// TODO: remove it after the deployment
+export const dynamic = "force-dynamic";
 
 // TODO: change api for voting
 async function getProtocols(): Promise<ProtocolDataType[]> {
@@ -32,7 +36,8 @@ const CommunityPage: NextPage = async () => {
         <DataTable columns={columns} data={protocols} hasFixedHeight />
       </section>
       <section className="w-full max-w-[436px] pt-[45px]">
-        <Card className="rounded-lg border border-border px-[20px] pb-[21px] pt-[23px]">
+        <Card className="relative rounded-lg border border-border px-[20px] pb-[21px] pt-[23px]">
+          <ProjectDrawer />
           <CardHeader>
             <CardTitle className="mb-[5px] text-xl font-semibold leading-[28px]">
               Project Name
@@ -40,32 +45,10 @@ const CommunityPage: NextPage = async () => {
             <CardDescription className="mb-[14px] leading-[24px] text-foreground">
               One liner of the project
             </CardDescription>
-            <ul className="flex gap-[6px]">
-              <li>
-                <Button
-                  variant="outline"
-                  asChild
-                  className="h-[22px] gap-1 rounded-full border border-border px-[6px] py-[1px] text-xs"
-                >
-                  <a href="https://x.com" target="_blank">
-                    Twitter
-                    <ArrowUpRight />
-                  </a>
-                </Button>
-              </li>
-              <li>
-                <Button
-                  variant="outline"
-                  asChild
-                  className="h-[22px] gap-1 rounded-full border border-border px-[6px] py-[1px] text-xs"
-                >
-                  <a href="https://x.com" target="_blank">
-                    Website
-                    <ArrowUpRight />
-                  </a>
-                </Button>
-              </li>
-            </ul>
+            <SiteList
+              twitterLink="https://twitter.com/verykindprotocol"
+              websiteLink="https://verykind.io/"
+            />
           </CardHeader>
           <Separator className="my-[15px]" />
           <CardContent className="mb-[21px]">

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/shadcn";
 import { ROUTES } from "@/utils/routes";
-import DamLogo from "@/components/icons/DamLogo";
+import { DamLogo } from "@/components/icons";
 import Underline from "@/components/ui/Underline";
 import ConnectButton from "@/components/ConnectButton";
 

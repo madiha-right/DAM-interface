@@ -4,7 +4,7 @@ interface IProps {
   className?: string;
 }
 
-const Menu: React.FC<IProps> = ({ className }) => {
+const IconMenu: React.FC<IProps> = ({ className }) => {
   return (
     <svg
       className={className}
@@ -24,4 +24,4 @@ const Menu: React.FC<IProps> = ({ className }) => {
   );
 };
 
-export default Menu;
+export default IconMenu;

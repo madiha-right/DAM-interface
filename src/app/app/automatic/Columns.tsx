@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { formatNumberWithUnit, formatPercentage } from "@/utils/format";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
 import { Button } from "@/components/ui/Button";
-import ArrowUpDown from "@/components/icons/ArrowUpDown";
+import ArrowUpDown from "@/components/icons/IconArrowUpDown";
 import type { ProtocolDataType } from "@/app/app/automatic/types";
 
 export const columns: ColumnDef<ProtocolDataType>[] = [

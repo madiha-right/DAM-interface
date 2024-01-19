@@ -4,7 +4,7 @@ interface IProps {
   className?: string;
 }
 
-const ArrowUpDown: React.FC<IProps> = ({ className }) => {
+const IconArrowUpDown: React.FC<IProps> = ({ className }) => {
   return (
     <svg
       className={className}
@@ -28,4 +28,4 @@ const ArrowUpDown: React.FC<IProps> = ({ className }) => {
   );
 };
 
-export default ArrowUpDown;
+export default IconArrowUpDown;
