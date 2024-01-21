@@ -3,8 +3,10 @@
 import React from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useAccount, useBalance } from "wagmi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useApproveERC20 } from "@/hooks/tx/useApproveERC20";
+import { CONTRACT_ADDRESSES } from "@/utils/constants";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Separator } from "@/components/ui/Seperator";
@@ -17,7 +19,8 @@ import {
   FormMessage,
 } from "@/components/ui/Form";
 import { Slider } from "@/components/ui/Slider";
-import { parseEther } from "viem";
+import { Address, parseEther } from "viem";
+import Spinner from "@/components/ui/Spinner";
 
 interface IProps {}
 
@@ -53,7 +56,14 @@ const RoundForm: React.FC<IProps> = () => {
   const account = useAccount();
   const balance = useBalance({
     address: account?.address,
-    // token: zeroAddress, // TODO: change to mETH
+    token: CONTRACT_ADDRESSES.mockYbToken, // TODO: change to mETH
+  });
+
+  const approval = useApproveERC20({
+    owner: account?.address as Address,
+    spender: CONTRACT_ADDRESSES.protocol.dam,
+    token: CONTRACT_ADDRESSES.mockYbToken,
+    amount: parseEther(form.watch("depositAmount").toString()),
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
@@ -69,7 +79,15 @@ const RoundForm: React.FC<IProps> = () => {
   };
 
   const isApprovalDisabled = () => {
-    return !form.getValues("depositAmount") || !!form.formState.errors.depositAmount;
+    return (
+      !form.getValues("depositAmount") ||
+      !!form.formState.errors.depositAmount ||
+      approval.isLoading
+    );
+  };
+
+  const isStartRoundDisabled = () => {
+    return !approval.isApproved || !!form.formState.errors.period || !!form.formState.errors.name;
   };
 
   return (
@@ -199,13 +217,14 @@ const RoundForm: React.FC<IProps> = () => {
         </fieldset>
         <Separator className="my-[18px]" />
         <div className="flex w-full items-center justify-between">
-          <Button type="button" disabled={isApprovalDisabled()}>
+          <Button type="button" disabled={isApprovalDisabled()} onClick={() => approval.write?.()}>
+            {approval.isLoading && <Spinner className="mr-[6px]" />}
             Approve mETH
           </Button>
           <Button
             type="submit"
             className="bg-mantle-teal hover:bg-mantle-pale"
-            disabled={!!form.formState.errors.period || !!form.formState.errors.name}
+            disabled={isStartRoundDisabled()}
           >
             Start Round
           </Button>
