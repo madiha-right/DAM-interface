@@ -24,10 +24,12 @@ const AppNav: React.FC = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="h-[63px] border-b border-border">
+    <nav className="sticky top-0 z-10 h-[63px] border-b border-border bg-background">
       <div className="h-full px-[30px]">
         <div className="container flex h-full items-center justify-between">
-          <DamLogo />
+          <Link href={ROUTES.app.automatic}>
+            <DamLogo />
+          </Link>
           <ul className="flex items-center">
             {routeList.map((route, index) => {
               return (

@@ -10,7 +10,7 @@ const mock_headerList = [
 interface IProps {}
 
 // TODO: mock to real data, heading to real time and round
-const AppHeader: React.FC<IProps> = () => {
+const HeaderStatus: React.FC<IProps> = () => {
   return (
     <header className={"mb-[19px] overflow-hidden rounded-xl border border-border"}>
       <h1 className="bg-gradient-to-b from-[#6AB6B1] via-[#6AB6B1]/90 via-35% to-[#c5e6e3]/90 py-[4px] pl-[18px] text-lg font-semibold text-background">
@@ -30,4 +30,4 @@ const AppHeader: React.FC<IProps> = () => {
   );
 };
 
-export default AppHeader;
+export default HeaderStatus;
