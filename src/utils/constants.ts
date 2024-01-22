@@ -20,7 +20,7 @@ export const CONTRACT_ADDRESSES: ContractAddresses = {
 type ToastType = {
   title: string;
   description: string;
-  variant?: "default" | "destructive" | null;
+  variant?: "default" | "destructive" | "constructive" | null;
 };
 
 export const TOAST_ERROR: ToastType = {
@@ -30,7 +30,7 @@ export const TOAST_ERROR: ToastType = {
 };
 
 export const TOAST_SUCCESS: ToastType = {
-  variant: "default",
+  variant: "constructive",
   title: "Success!",
   description: "Your request was successful.",
 };

@@ -3,10 +3,13 @@
 import React from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
+import { Address, parseEther } from "viem";
 import { useAccount, useBalance } from "wagmi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useApproveERC20 } from "@/hooks/tx/useApproveERC20";
+import { useOperateDam } from "@/hooks/tx/useOperateDam";
 import { CONTRACT_ADDRESSES } from "@/utils/constants";
+import { daysToSeconds } from "@/utils/times";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Separator } from "@/components/ui/Seperator";
@@ -19,7 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/Form";
 import { Slider } from "@/components/ui/Slider";
-import { Address, parseEther } from "viem";
 import Spinner from "@/components/ui/Spinner";
 
 interface IProps {}
@@ -52,6 +54,7 @@ const RoundForm: React.FC<IProps> = () => {
       depositAmount: 0,
     },
   });
+  const depositAmount = form.watch("depositAmount");
 
   const account = useAccount();
   const balance = useBalance({
@@ -63,19 +66,38 @@ const RoundForm: React.FC<IProps> = () => {
     owner: account?.address as Address,
     spender: CONTRACT_ADDRESSES.protocol.dam,
     token: CONTRACT_ADDRESSES.mockYbToken,
-    amount: parseEther(form.watch("depositAmount").toString()),
+    amount: parseEther(depositAmount.toString()),
   });
+  const damOperation = useOperateDam();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!balance.data) {
       form.setError("depositAmount", { message: "Please connect wallet first" });
       return;
     }
-    if (parseEther(values.depositAmount.toString()) > balance.data.value) {
+
+    const amount = parseEther(values.depositAmount.toString());
+
+    if (amount > balance.data.value) {
       form.setError("depositAmount", {
         message: "Don't have enough mETH",
       });
     }
+
+    damOperation.write?.({
+      args: [
+        amount,
+        BigInt(daysToSeconds(values.period)),
+        BigInt(values.reinvestmentRatio[0]),
+        BigInt(values.autoStreamRatio[0]),
+      ],
+    });
+  };
+
+  const handleClickApprove = () => {
+    approval.write?.({
+      args: [CONTRACT_ADDRESSES.mockYbToken, parseEther(depositAmount.toString())],
+    });
   };
 
   const isApprovalDisabled = () => {
@@ -87,7 +109,14 @@ const RoundForm: React.FC<IProps> = () => {
   };
 
   const isStartRoundDisabled = () => {
-    return !approval.isApproved || !!form.formState.errors.period || !!form.formState.errors.name;
+    return (
+      !depositAmount ||
+      !!form.formState.errors.depositAmount ||
+      !!form.formState.errors.period ||
+      !!form.formState.errors.name ||
+      !approval.isApproved ||
+      damOperation.isLoading
+    );
   };
 
   return (
@@ -217,7 +246,7 @@ const RoundForm: React.FC<IProps> = () => {
         </fieldset>
         <Separator className="my-[18px]" />
         <div className="flex w-full items-center justify-between">
-          <Button type="button" disabled={isApprovalDisabled()} onClick={() => approval.write?.()}>
+          <Button type="button" disabled={isApprovalDisabled()} onClick={handleClickApprove}>
             {approval.isLoading && <Spinner className="mr-[6px]" />}
             Approve mETH
           </Button>
@@ -226,6 +255,7 @@ const RoundForm: React.FC<IProps> = () => {
             className="bg-mantle-teal hover:bg-mantle-pale"
             disabled={isStartRoundDisabled()}
           >
+            {damOperation.isLoading && <Spinner className="mr-[6px]" />}
             Start Round
           </Button>
         </div>

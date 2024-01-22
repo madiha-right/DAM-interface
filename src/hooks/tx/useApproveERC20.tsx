@@ -8,7 +8,7 @@ type ArgsType = {
   token: Address;
   amount: bigint;
 };
-
+// TODO: update to permit for operatedam and deposit so don't need to use approval
 export const useApproveERC20 = (args: ArgsType) => {
   const { owner, spender, token, amount } = args;
   const { toast } = useToast();
@@ -25,7 +25,6 @@ export const useApproveERC20 = (args: ArgsType) => {
     address: token,
     abi: erc20ABI,
     functionName: "approve",
-    args: [spender, amount],
     onError(err) {
       console.log(err);
       toast(TOAST_ERROR);
@@ -49,7 +48,7 @@ export const useApproveERC20 = (args: ArgsType) => {
   });
 
   return {
-    isApproved: !!readAllowance.data && readAllowance.data >= amount,
+    isApproved: readAllowance.data ? readAllowance.data >= amount : false,
     isLoading: writeApprove.isLoading || txApprove.isLoading,
     data: writeApprove.data,
     write: writeApprove.write,
