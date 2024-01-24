@@ -36,3 +36,5 @@ export const TOAST_SUCCESS: ToastType = {
 };
 
 export const DEADLINE = 1;
+
+export const DEFAULT_DATE_FORMAT = "MMM DD";

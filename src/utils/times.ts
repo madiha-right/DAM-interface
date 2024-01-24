@@ -1,3 +1,5 @@
+import { formatTimestamp } from "@/lib/dayjs";
+
 export const daysToSeconds = (days: number) => {
   return days * 24 * 60 * 60;
 };
@@ -9,3 +11,5 @@ export const getCurrentTimeInSeconds = () => {
 export const getDeadline = (days: number) => {
   return BigInt(getCurrentTimeInSeconds() + daysToSeconds(days));
 };
+
+export { formatTimestamp };

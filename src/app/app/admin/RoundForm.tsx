@@ -45,9 +45,9 @@ const formSchema = z.object({
 
 /**
  * TODO:
- * 4. permit and operate dam in one action useSignMessage
  * 5. fix vercel deployment
  * 6. save name to database
+ * 7. name validation
  */
 const deadline = getDeadline(DEADLINE);
 
