@@ -11,10 +11,10 @@ type ContractAddresses = {
 export const CONTRACT_ADDRESSES: ContractAddresses = {
   // TODO: handle production
   protocol: {
-    dam: "0xbCC7007ca073b6d92af1d1cf51c479C54ce97c74",
-    embankment: "0x69c3C288e8871859A6a10f50f5f0E64b04295Bd9",
+    dam: "0x0b6913ca639fEb218a03604211066fD856Aa4990",
+    embankment: "0x20C382f519bBbF1D2BDab2b681Da76F8b6eBcB55",
   },
-  mockYbToken: "0xE78FD8ee550cF13190AEd68C84b05E3EC2610e80",
+  mockYbToken: "0xD299a1bb1b0Cf47353373b4Cc35A512705101354",
 };
 
 type ToastType = {
@@ -34,3 +34,5 @@ export const TOAST_SUCCESS: ToastType = {
   title: "Success!",
   description: "Your request was successful.",
 };
+
+export const DEADLINE = 1;

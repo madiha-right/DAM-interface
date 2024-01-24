@@ -3,13 +3,13 @@
 import React from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { Address, parseEther } from "viem";
+import { Address, parseEther, hexToSignature } from "viem";
 import { useAccount, useBalance } from "wagmi";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useApproveERC20 } from "@/hooks/tx/useApproveERC20";
-import { useOperateDam } from "@/hooks/tx/useOperateDam";
-import { CONTRACT_ADDRESSES } from "@/utils/constants";
-import { daysToSeconds } from "@/utils/times";
+import { usePermit } from "@/hooks/tx/usePermit";
+import { useOperateDamWithPermit } from "@/hooks/tx/useOperateDam";
+import { CONTRACT_ADDRESSES, DEADLINE } from "@/utils/constants";
+import { getDeadline, daysToSeconds } from "@/utils/times";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Separator } from "@/components/ui/Seperator";
@@ -43,6 +43,14 @@ const formSchema = z.object({
   ),
 });
 
+/**
+ * TODO:
+ * 4. permit and operate dam in one action useSignMessage
+ * 5. fix vercel deployment
+ * 6. save name to database
+ */
+const deadline = getDeadline(DEADLINE);
+
 const RoundForm: React.FC<IProps> = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,13 +70,15 @@ const RoundForm: React.FC<IProps> = () => {
     token: CONTRACT_ADDRESSES.mockYbToken, // TODO: change to mETH
   });
 
-  const approval = useApproveERC20({
+  const approval = usePermit({
     owner: account?.address as Address,
     spender: CONTRACT_ADDRESSES.protocol.dam,
     token: CONTRACT_ADDRESSES.mockYbToken,
     amount: parseEther(depositAmount.toString()),
+    deadline,
   });
-  const damOperation = useOperateDam();
+
+  const damOperationWithPermit = useOperateDamWithPermit();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!balance.data) {
@@ -84,27 +94,33 @@ const RoundForm: React.FC<IProps> = () => {
       });
     }
 
-    damOperation.write?.({
+    const { v, r, s } = hexToSignature(approval.data as Address);
+
+    damOperationWithPermit.write?.({
       args: [
         amount,
         BigInt(daysToSeconds(values.period)),
         BigInt(values.reinvestmentRatio[0]),
         BigInt(values.autoStreamRatio[0]),
+        deadline,
+        v,
+        r,
+        s,
       ],
     });
   };
 
   const handleClickApprove = () => {
-    approval.write?.({
-      args: [CONTRACT_ADDRESSES.mockYbToken, parseEther(depositAmount.toString())],
-    });
+    approval.write();
   };
 
   const isApprovalDisabled = () => {
     return (
       !form.getValues("depositAmount") ||
       !!form.formState.errors.depositAmount ||
-      approval.isLoading
+      !account?.address ||
+      approval.isLoading ||
+      approval.isSuccess
     );
   };
 
@@ -114,8 +130,7 @@ const RoundForm: React.FC<IProps> = () => {
       !!form.formState.errors.depositAmount ||
       !!form.formState.errors.period ||
       !!form.formState.errors.name ||
-      !approval.isApproved ||
-      damOperation.isLoading
+      damOperationWithPermit.isLoading
     );
   };
 
@@ -255,7 +270,7 @@ const RoundForm: React.FC<IProps> = () => {
             className="bg-mantle-teal hover:bg-mantle-pale"
             disabled={isStartRoundDisabled()}
           >
-            {damOperation.isLoading && <Spinner className="mr-[6px]" />}
+            {damOperationWithPermit.isLoading && <Spinner className="mr-[6px]" />}
             Start Round
           </Button>
         </div>

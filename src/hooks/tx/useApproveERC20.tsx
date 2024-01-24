@@ -8,7 +8,7 @@ type ArgsType = {
   token: Address;
   amount: bigint;
 };
-// TODO: update to permit for operatedam and deposit so don't need to use approval
+
 export const useApproveERC20 = (args: ArgsType) => {
   const { owner, spender, token, amount } = args;
   const { toast } = useToast();

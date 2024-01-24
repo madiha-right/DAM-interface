@@ -18,6 +18,7 @@ export const siteConfig: SiteConfig = {
   description:
     "A grant program that channels Mantle's substantial treasury funds into various ecosystem initiatives and distributes the resulting yield stream as grants, starting with mantle LSD",
   url: DAM_BASE_URL,
+  // TODO: set open graph image locally
   // ogImage: "/open-graph/pill.webp",
   // links: {
   //   instagram: "https://www.instagram.com/punkcube_/",

@@ -22,7 +22,7 @@ export const config = createConfig(
     // Required
     appName: "DAM",
 
-    // Optional TODO:
+    // Optional TODO: change below details
     appDescription: "Your App Description",
     appUrl: "https://family.co", // your app's url
     appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)

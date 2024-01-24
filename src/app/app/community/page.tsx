@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: "Distribution based on community gauge-voting until the end of round.", // TODO:
 };
 
-// TODO: remove it after the deployment
+// TODO: to remove this dynamic export, meaning ssr, we need to delete route.ts and move logic to this local file
 export const dynamic = "force-dynamic";
 
 // TODO: change api for voting

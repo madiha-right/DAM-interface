@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "DAM | Automatic",
   description: "Distribution based on Auto-Metric until the end of the round.",
 };
-// TODO: remove it after the deployment
+// TODO: to remove this dynamic export, meaning ssr, we need to delete route.ts and move logic in to module
 export const dynamic = "force-dynamic";
 
 async function getProtocols(): Promise<ProtocolDataType[]> {
