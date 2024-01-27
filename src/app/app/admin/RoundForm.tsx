@@ -78,7 +78,7 @@ const RoundForm: React.FC<IProps> = () => {
     deadline,
   });
 
-  const damOperationWithPermit = useOperateDamWithPermit();
+  const damOperationWithPermit = useOperateDamWithPermit({ onSuccess: form.reset });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!balance.data) {

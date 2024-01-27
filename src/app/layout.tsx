@@ -5,7 +5,7 @@ import { inter } from "@/utils/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  // metadataBase: new URL(CDN_PUNK_URL), TODO:
+  metadataBase: new URL("https://cdn.punkcube.xyz"), // TODO: change to dam
   title: siteConfig.name,
   description: siteConfig.description,
   keywords: ["Defi", "Ecosystem fund", "Grant", "Mantle", "Metis", "Layer 2", "L2", "Voting"],
@@ -18,13 +18,13 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    // images: siteConfig.ogImage,
+    images: siteConfig.ogImage,
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    // images: siteConfig.ogImage,
+    images: siteConfig.ogImage,
     creator: "@0xMaki, @Glovin_, @madiha_right",
   },
   icons: {

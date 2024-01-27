@@ -1,25 +1,59 @@
-import type { MantleJourneyDataType, ProtocolDataType } from "@/app/app/automatic/types";
+import { MANTLE_JOURNEY_BASE_URL } from "@/utils/site";
 
-const MANTLE_JOURNEY_BASE_URL = "https://mdi-quests-api-production.up.railway.app";
+type Stat = {
+  _id: string;
+  value: number;
+  miles: number;
+  cumulateMiles: number;
+  _1DayChanges?: number;
+  _7DayChanges?: number;
+};
 
-export async function GET(): Promise<Response> {
-  const resTxn = await fetch(MANTLE_JOURNEY_BASE_URL + "/leaderboard/protocol/txn");
-  const resTvl = await fetch(MANTLE_JOURNEY_BASE_URL + "/leaderboard/protocol/tvl");
-  const txn = await resTxn.json();
-  const tvl = await resTvl.json();
+export type MantleJourneyDataType = {
+  _id: string;
+  protocol: string;
+  type?: string;
+  stat: Stat;
+  rank?: number;
+  categories: string[];
+  name: string;
+  website: string;
+};
 
-  const data = mergeData(txn, tvl);
+export type ProtocolDataType = {
+  _id: string;
+  protocol: string;
+  txCount?: number;
+  tvl?: number;
+  milesToday: number;
+  milesAccumulated: number;
+  category: string;
+  name: string;
+  website: string;
+};
 
-  return Response.json({ data });
-}
 /**
  * TODO:
- * 1. Add error handling
- * 2. format tvl, tx count, miles
- * - miles should be percentage that represents growth rate based on last round's info
- * - mock data for last round (In real world it will be the data of before round begins)
- * - how are we gonna compare the growth rate? Big O notation should be considered
+ * 1. on start round, save the protocol data to the database
+ * 2. on end round, compare current protocol data to the saved data
  */
+
+export const getProtocols = async (): Promise<ProtocolDataType[] | []> => {
+  try {
+    const resTxn = await fetch(MANTLE_JOURNEY_BASE_URL + "/leaderboard/protocol/txn");
+    const resTvl = await fetch(MANTLE_JOURNEY_BASE_URL + "/leaderboard/protocol/tvl");
+    const txn = await resTxn.json();
+    const tvl = await resTvl.json();
+
+    const data = mergeData(txn, tvl);
+
+    return data;
+  } catch (error) {
+    console.error("error", error);
+    return [];
+  }
+};
+
 const mergeData = (
   transactionsData: MantleJourneyDataType[],
   tvlData: MantleJourneyDataType[],

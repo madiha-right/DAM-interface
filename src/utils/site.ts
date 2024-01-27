@@ -4,7 +4,7 @@ type SiteConfig = {
   name: string;
   description: string;
   url: UrlType;
-  // ogImage: string;
+  ogImage: string;
   // links: {
   //   instagram: string;
   // };
@@ -18,9 +18,13 @@ export const siteConfig: SiteConfig = {
   description:
     "A grant program that channels Mantle's substantial treasury funds into various ecosystem initiatives and distributes the resulting yield stream as grants, starting with mantle LSD",
   url: DAM_BASE_URL,
-  // TODO: set open graph image locally
-  // ogImage: "/open-graph/pill.webp",
+  ogImage: "https://cdn.punkcube.xyz/open-graph/dam.webp",
   // links: {
   //   instagram: "https://www.instagram.com/punkcube_/",
   // },
 };
+
+const DAM_SUBGRAPH_BASE_URL = "https://subgraph-api.mantle.xyz";
+export const DAM_SUBGRAPH_URL = `${DAM_SUBGRAPH_BASE_URL}/subgraphs/name/test`;
+
+export const MANTLE_JOURNEY_BASE_URL = "https://mdi-quests-api-production.up.railway.app";

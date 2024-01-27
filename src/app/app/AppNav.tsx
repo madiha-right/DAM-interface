@@ -40,13 +40,13 @@ const AppNav: React.FC = () => {
                     "relative mr-[2px] w-[107px] text-center transition-colors duration-200 last:mr-0",
                   )}
                 >
-                  <Link href={route.href} className="inline-block w-full">
+                  <Link href={route.href} className="inline-block w-full py-[6px]">
                     {route.name}
                   </Link>
                   <Underline
                     className={cn(
                       pathname === route.href ? "max-w-[89px]" : "max-w-0",
-                      "absolute -bottom-[19px] left-[10px] w-full",
+                      "absolute -bottom-[13px] left-[10px] w-full",
                     )}
                     hasShown={pathname === route.href}
                   />

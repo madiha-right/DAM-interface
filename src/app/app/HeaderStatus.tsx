@@ -1,11 +1,8 @@
-"use client";
-
 import React from "react";
-import { useIsMounted } from "connectkit";
-import { useReadRound } from "@/hooks/useReadRound";
+import { getCurrentRound } from "@/actions/rounds";
 import { formatTimestamp } from "@/utils/times";
-import { Skeleton } from "@/components/ui/Skeleton";
 
+// TODO: mock to real data -> server side with api call
 const mock_headerList = [
   { title: "Accumulated incentive", value: "420ETH" },
   { title: "Total No. of projects", value: "99" },
@@ -15,19 +12,13 @@ const mock_headerList = [
 
 interface IProps {}
 
-// TODO: mock to real data -> server side with api call
-const HeaderStatus: React.FC<IProps> = () => {
-  const round = useReadRound();
-  const isMounted = useIsMounted();
+const HeaderStatus: React.FC<IProps> = async () => {
+  const round = await getCurrentRound();
 
   return (
     <header className={"mb-[19px] overflow-hidden rounded-xl border border-border"}>
       <h1 className="bg-gradient-to-b from-[#6AB6B1] via-[#6AB6B1]/90 via-35% to-[#c5e6e3]/90 py-[4px] pl-[18px] text-lg font-semibold text-background">
-        {isMounted ? (
-          `DAM Round #${round.id} - [ ${formatTimestamp(round.startTime as bigint)} ~ ${formatTimestamp(round.endTime as bigint)} ]`
-        ) : (
-          <Skeleton className="h-[27px] w-[300px]" />
-        )}
+        {`DAM Round #${round.id} - [ ${formatTimestamp(round.startTime as bigint)} ~ ${formatTimestamp(round.endTime as bigint)} ]`}
       </h1>
       <dl className="flex px-[20px] py-[15px]">
         {mock_headerList.map((item, index) => (

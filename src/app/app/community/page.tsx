@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import type { Metadata } from "next";
-import { DAM_BASE_URL } from "@/utils/site";
-import type { ProtocolDataType } from "@/app/app/automatic/types";
+import { getProtocols } from "@/actions/protocols";
 import DataTable from "@/app/app/DataTable";
 import { columns } from "./Columns";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card" // prettier-ignore
@@ -12,19 +11,8 @@ import SiteList from "./SiteList";
 
 export const metadata: Metadata = {
   title: "DAM | Community",
-  description: "Distribution based on community gauge-voting until the end of round.", // TODO:
+  description: "Distribution based on community gauge-voting until the end of round.",
 };
-
-// TODO: to remove this dynamic export, meaning ssr, we need to delete route.ts and move logic to this local file
-export const dynamic = "force-dynamic";
-
-// TODO: change api for voting
-async function getProtocols(): Promise<ProtocolDataType[]> {
-  const res = await fetch(DAM_BASE_URL + "/app/automatic/api");
-  const { data } = await res.json();
-
-  return data;
-}
 
 // TODO: Drawer for more info
 const CommunityPage: NextPage = async () => {

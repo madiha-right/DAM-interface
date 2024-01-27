@@ -1,11 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { formatNumberWithUnit, formatPercentage } from "@/utils/format";
+import type { ProtocolDataType } from "@/actions/protocols";
+import { formatCount, formatNumberToDollar } from "@/utils/format";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
 import { Button } from "@/components/ui/Button";
 import ArrowUpDown from "@/components/icons/IconArrowUpDown";
-import type { ProtocolDataType } from "@/app/app/automatic/types";
 
 export const columns: ColumnDef<ProtocolDataType>[] = [
   {
@@ -21,7 +21,7 @@ export const columns: ColumnDef<ProtocolDataType>[] = [
     header: getHeaderName(ColumnKeys.Tvl),
     cell: ({ row }) => {
       const tvl = parseFloat(row.getValue(ColumnKeys.Tvl));
-      const formatted = formatNumberWithUnit(tvl);
+      const formatted = formatNumberToDollar(tvl);
 
       return <>{formatted}</>;
     },
@@ -31,7 +31,7 @@ export const columns: ColumnDef<ProtocolDataType>[] = [
     header: getHeaderName(ColumnKeys.TxCount),
     cell: ({ row }) => {
       const tvl = parseFloat(row.getValue(ColumnKeys.TxCount));
-      const formatted = formatNumberWithUnit(tvl);
+      const formatted = formatCount(tvl);
 
       return <>{formatted}</>;
     },
@@ -53,13 +53,10 @@ export const columns: ColumnDef<ProtocolDataType>[] = [
       );
     },
     cell: ({ row }) => {
-      const mileTodayGrowth = parseFloat(row.getValue(ColumnKeys.MilesToday));
+      const milesToday = parseFloat(row.getValue(ColumnKeys.MilesToday));
+      const formatted = formatCount(milesToday);
 
-      return (
-        <span className={mileTodayGrowth >= 0 ? "text-constructive" : "text-destructive"}>
-          {formatPercentage(mileTodayGrowth)}
-        </span>
-      );
+      return <>{formatted}</>;
     },
   },
   {
@@ -79,13 +76,10 @@ export const columns: ColumnDef<ProtocolDataType>[] = [
       );
     },
     cell: ({ row }) => {
-      const mileAccGrowth = parseFloat(row.getValue(ColumnKeys.MilesAccumulated));
+      const milesAccumulated = parseFloat(row.getValue(ColumnKeys.MilesAccumulated));
+      const formatted = formatCount(milesAccumulated);
 
-      return (
-        <span className={mileAccGrowth >= 0 ? "text-constructive" : "text-destructive"}>
-          {formatPercentage(mileAccGrowth)}
-        </span>
-      );
+      return <>{formatted}</>;
     },
   },
 ];

@@ -41,7 +41,7 @@ export const useOperateDam = (args: ArgsType) => {
   };
 };
 
-export const useOperateDamWithPermit = () => {
+export const useOperateDamWithPermit = (args: ArgsType) => {
   const { toast } = useToast();
 
   const writeOperateDamWithPermit = useContractWrite({
@@ -61,6 +61,7 @@ export const useOperateDamWithPermit = () => {
         return;
       }
       toast(TOAST_SUCCESS);
+      args.onSuccess?.();
     },
     onError() {
       toast(TOAST_ERROR);

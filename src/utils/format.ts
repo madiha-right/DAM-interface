@@ -1,4 +1,4 @@
-export const formatNumberWithUnit = (amount: number): string => {
+export const formatNumberToDollar = (amount: number): string => {
   let formattedNumber: string;
 
   if (amount >= 1_000_000_000) {
@@ -11,8 +11,12 @@ export const formatNumberWithUnit = (amount: number): string => {
     formattedNumber = (amount / 1_000).toFixed(2);
     return "$" + parseFloat(formattedNumber).toString() + "k";
   } else {
-    return "$" + amount.toString();
+    return "$" + amount.toFixed(0);
   }
+};
+
+export const formatCount = (count: number): string => {
+  return count.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 export const formatPercentage = (value: number): string => {
