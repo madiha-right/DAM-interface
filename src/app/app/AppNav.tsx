@@ -5,9 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/shadcn";
 import { ROUTES } from "@/utils/routes";
-import { DamLogo } from "@/components/icons";
+import { useCandidates, useToggleCandidateList } from "@/hooks/global/useCandidates";
+import { DamLogo, IconArrowLeft } from "@/components/icons";
 import Underline from "@/components/ui/Underline";
 import ConnectButton from "@/components/ConnectButton";
+import { Button } from "@/components/ui/Button";
 
 const routeList = [
   {
@@ -22,6 +24,8 @@ const routeList = [
 
 const AppNav: React.FC = () => {
   const pathname = usePathname();
+  const [candidates] = useCandidates();
+  const [isOpenCandidateList, toggleCandidateList] = useToggleCandidateList();
 
   return (
     <nav className="sticky top-0 z-10 h-[63px] border-b border-border bg-background">
@@ -54,10 +58,35 @@ const AppNav: React.FC = () => {
               );
             })}
           </ul>
-          {/* <ConnectKitButton showAvatar={false} /> */}
-          <div className="flex min-w-[150px] justify-end">
-            <ConnectButton />
-          </div>
+          <ul className="relative">
+            {candidates.length > 0 && (
+              <li className="absolute -left-[18px] top-0 h-[28px] -translate-x-full items-center bg-background">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-full items-center gap-[6px] rounded-full border-sm border-mantle-teal/50 px-[10px] py-0"
+                  onClick={toggleCandidateList}
+                >
+                  {isOpenCandidateList ? (
+                    <>
+                      <IconArrowLeft />
+                      <span className="text-sm leading-[14px] text-mantle-teal">Back to list</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-sm leading-[14px] text-mantle-teal">Candidate</span>
+                      <span className="flex h-[16px] items-center justify-center rounded-full bg-mantle-teal px-[6px] text-center text-xs leading-[12px] text-background">
+                        {candidates.length}
+                      </span>
+                    </>
+                  )}
+                </Button>
+              </li>
+            )}
+            <li className="flex min-w-[150px] justify-end">
+              <ConnectButton />
+            </li>
+          </ul>
         </div>
       </div>
     </nav>

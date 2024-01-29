@@ -1,10 +1,6 @@
 import React from "react";
 
-interface IProps {
-  className?: string;
-}
-
-const IconPlusCircle: React.FC<IProps> = () => {
+const IconMinusCircle: React.FC = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
       <path
@@ -13,10 +9,9 @@ const IconPlusCircle: React.FC<IProps> = () => {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path d="M12.5 8.5V16.5" stroke="#020617" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M8.5 12.5H16.5" stroke="#020617" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 };
 
-export default IconPlusCircle;
+export default IconMinusCircle;

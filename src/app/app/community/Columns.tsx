@@ -1,13 +1,13 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { formatPercentage } from "@/utils/format";
+import type { ProtocolCommunityType } from "@/actions/protocols";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
+import { formatPercentage } from "@/utils/format";
 import { Button } from "@/components/ui/Button";
 import ArrowUpDown from "@/components/icons/IconArrowUpDown";
-import type { ProtocolDataType } from "@/app/app/automatic/types";
 
-export const columns: ColumnDef<ProtocolDataType>[] = [
+export const columns: ColumnDef<ProtocolCommunityType>[] = [
   {
     accessorKey: ColumnKeys.Name,
     header: getHeaderName(ColumnKeys.Name),
@@ -33,9 +33,9 @@ export const columns: ColumnDef<ProtocolDataType>[] = [
       );
     },
     cell: ({ row }) => {
-      const mileAccGrowth = parseFloat(row.getValue(ColumnKeys.ReceivedWeight));
+      const weight = parseFloat(row.getValue(ColumnKeys.ReceivedWeight));
 
-      return <span>{formatPercentage(mileAccGrowth)}</span>;
+      return <span>{formatPercentage(weight)}</span>;
     },
   },
 ];

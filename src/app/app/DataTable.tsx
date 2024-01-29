@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-table";
 import { cn } from "@/lib/shadcn";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
+import { useSelectedRowId } from "@/hooks/global/useSelectedRowId";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table"; // prettier-ignore
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -23,15 +24,15 @@ import { IconMenu } from "@/components/icons";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  hasVisibility?: boolean;
-  hasFixedHeight?: boolean;
+  from: "communityStream" | "autoStream";
 }
 
 const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
-  const { columns, data, hasVisibility, hasFixedHeight } = props;
+  const { columns, data, from } = props;
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [selectedRowId, setSelectedRowId] = useSelectedRowId();
 
   const table = useReactTable({
     data,
@@ -42,6 +43,8 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    enableRowSelection: true,
+    getRowId: (row) => (row as Record<"id", string>).id,
     state: { sorting, columnFilters, columnVisibility },
   });
 
@@ -54,7 +57,7 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
           onChange={(event) => table.getColumn(ColumnKeys.Name)?.setFilterValue(event.target.value)}
           className="max-w-[276px] py-1.5 pl-[15px]"
         />
-        {hasVisibility && (
+        {from === "autoStream" && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -84,7 +87,7 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
       </div>
       <div
         className={cn(
-          hasFixedHeight ? "max-h-[525px] overflow-y-scroll" : "shadow-md",
+          from === "communityStream" ? "max-h-[525px] overflow-y-scroll" : "shadow-md",
           "rounded-xl border",
         )}
       >
@@ -110,7 +113,15 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  className={cn(
+                    from === "communityStream" && row.id === selectedRowId
+                      ? "bg-border hover:bg-border"
+                      : "cursor-pointer",
+                  )}
+                  onClick={() => setSelectedRowId(row.id)}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="h-[56px] px-[30px] text-sm font-medium">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

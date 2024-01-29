@@ -20,13 +20,12 @@ export const formatCount = (count: number): string => {
 };
 
 export const formatPercentage = (value: number): string => {
-  // Multiply by 100 and format the number with two decimal places
-  let formattedValue = (value * 100).toFixed(2);
-
-  // Prefix with '+' if the number is positive
-  if (value > 0) {
-    formattedValue = "+" + formattedValue;
+  const percentage = value * 100;
+  // Check if the percentage is an integer
+  if (percentage % 1 === 0) {
+    // If it's an integer, return it without decimal places
+    return percentage + "%";
   }
-
-  return formattedValue + "%";
+  // If it's not an integer, return it with one decimal place
+  return percentage.toFixed(1) + "%";
 };

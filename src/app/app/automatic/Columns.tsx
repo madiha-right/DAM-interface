@@ -1,13 +1,13 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import type { ProtocolDataType } from "@/actions/protocols";
+import type { ProtocolAutoType } from "@/actions/protocols";
 import { formatCount, formatNumberToDollar } from "@/utils/format";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
 import { Button } from "@/components/ui/Button";
 import ArrowUpDown from "@/components/icons/IconArrowUpDown";
 
-export const columns: ColumnDef<ProtocolDataType>[] = [
+export const columns: ColumnDef<ProtocolAutoType>[] = [
   {
     accessorKey: ColumnKeys.Name,
     header: getHeaderName(ColumnKeys.Name),
