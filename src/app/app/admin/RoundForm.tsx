@@ -45,7 +45,6 @@ const formSchema = z.object({
 
 /**
  * TODO:
- * 5. fix vercel deployment
  * 6. save name to database
  * 7. name validation
  */
@@ -67,13 +66,13 @@ const RoundForm: React.FC<IProps> = () => {
   const account = useAccount();
   const balance = useBalance({
     address: account?.address,
-    token: CONTRACT_ADDRESSES.mockYbToken, // TODO: change to mETH
+    token: CONTRACT_ADDRESSES.ybToken,
   });
 
   const approval = usePermit({
     owner: account?.address as Address,
     spender: CONTRACT_ADDRESSES.protocol.dam,
-    token: CONTRACT_ADDRESSES.mockYbToken,
+    token: CONTRACT_ADDRESSES.ybToken,
     amount: parseEther(depositAmount.toString()),
     deadline,
   });
@@ -92,6 +91,7 @@ const RoundForm: React.FC<IProps> = () => {
       form.setError("depositAmount", {
         message: "Don't have enough mETH",
       });
+      return;
     }
 
     const { v, r, s } = hexToSignature(approval.data as Address);
@@ -127,6 +127,7 @@ const RoundForm: React.FC<IProps> = () => {
   const isStartRoundDisabled = () => {
     return (
       !depositAmount ||
+      !approval.data ||
       !!form.formState.errors.depositAmount ||
       !!form.formState.errors.period ||
       !!form.formState.errors.name ||

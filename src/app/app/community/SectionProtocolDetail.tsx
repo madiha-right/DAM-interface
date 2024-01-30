@@ -72,7 +72,7 @@ const SectionProtocolDetail: React.FC<IProps> = ({ protocols }) => {
       />
       {isOpenCandidateList && (
         <div className="mt-[20px] flex gap-[20px]">
-          <DialogVoteButton disabled={totalProportions === 0} />
+          <DialogVoteButton candidates={candidates} disabled={totalProportions === 0} />
           <Button
             variant="outline"
             className="h-[41px] flex-1 rounded-xl"

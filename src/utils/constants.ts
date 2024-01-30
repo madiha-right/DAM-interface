@@ -5,16 +5,24 @@ type ContractAddresses = {
     dam: Address;
     embankment: Address;
   };
-  mockYbToken: Address;
+  ybToken: Address;
 };
+
+const MANTLE_ETH_ADDRESS = "0xcDA86A272531e8640cD7F1a92c01839911B90bb0";
 
 export const CONTRACT_ADDRESSES: ContractAddresses = {
   // TODO: handle production
   protocol: {
-    dam: "0x93e407C6A2e3B8fd5BF3103c784bA819C731aAB7",
-    embankment: "0x53F088b44022bd85E952D8D08bc7A06e46A93928",
+    dam:
+      process.env.NODE_ENV === "development"
+        ? "0x4c5859f0F772848b2D91F1D83E2Fe57935348029"
+        : "0x93e407C6A2e3B8fd5BF3103c784bA819C731aAB7",
+    embankment:
+      process.env.NODE_ENV === "development"
+        ? "0x809d550fca64d94Bd9F66E60752A544199cfAC3D"
+        : "0x53F088b44022bd85E952D8D08bc7A06e46A93928",
   },
-  mockYbToken: "0xe08500d66Fc3fF7e755d316eF52CBf67Fca0269F",
+  ybToken: MANTLE_ETH_ADDRESS,
 };
 
 type ToastType = {

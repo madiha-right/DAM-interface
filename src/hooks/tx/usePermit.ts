@@ -1,6 +1,6 @@
 import { Address, useContractRead, useSignTypedData } from "wagmi";
-import { mantleTestnet } from "wagmi/chains";
-import MockYbToken from "@/abis/MockYbToken.json";
+import { chainId } from "@/lib/wagmi";
+import METHL2 from "@/abis/METHL2.json";
 
 type ArgsType = {
   owner: Address;
@@ -25,16 +25,16 @@ export const usePermit = (args: ArgsType) => {
 
   const readNonce = useContractRead({
     address: token,
-    abi: MockYbToken.abi,
+    abi: METHL2.abi,
     functionName: "nonces",
     args: [owner],
     enabled: !!owner,
   });
 
   const domain = {
-    name: "Mock Yield-bearing token",
+    name: "mETH",
     version: "1",
-    chainId: mantleTestnet.id,
+    chainId: chainId,
     verifyingContract: token,
   };
 

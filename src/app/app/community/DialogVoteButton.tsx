@@ -1,4 +1,6 @@
 import React from "react";
+import { ProtocolCommunityType } from "@/actions/protocols";
+import { formatPercentage } from "@/utils/format";
 import { Button } from "@/components/ui/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/Tooltip";
 import {
@@ -13,10 +15,23 @@ import {
 import IconInfo from "@/components/icons/IconInfo";
 
 interface IProps {
+  candidates: ProtocolCommunityType[];
   disabled: boolean;
 }
+/**
+ * TODO:
+ * 0. local test (don't need to do the local subgraph at this point)
+ * 	 e. deploy subgraph to forked mantle mainnet
+ * 1. get blocknumber on start of round
+ * 2. get snapshot blocknumber
+ * 3. get voting power from https://api.delegatevote.mantle.xyz/graphql?query=query+GetDelegate+%7B%0A++delegates%28block%3A+19455119%2C+where%3A+%7Bid%3A+%220xbc66065e9640Df94338c6956297ca90ec116651d%22%7D%29+%7B%0A++++votes%0A++++id%0A++++bitVotes%0A++++l2MntVotes%0A++++mntVotes%0A++%7D%0A%7D#
+ */
+const DialogVoteButton: React.FC<IProps> = ({ candidates, disabled }) => {
+  const choice = candidates
+    .filter((candidate) => (candidate.voteWeight as number) > 0)
+    .map((candidate) => `${formatPercentage(candidate.voteWeight as number)} for ${candidate.name}`)
+    .join(", ");
 
-const DialogVoteButton: React.FC<IProps> = ({ disabled }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -32,11 +47,26 @@ const DialogVoteButton: React.FC<IProps> = ({ disabled }) => {
           <DialogTitle className="text-center">Cast your vote</DialogTitle>
         </DialogHeader>
         <dl>
-          <div className="mb-[10px] flex items-center justify-between last:mb-0">
+          <div className="mb-[2px] flex justify-between last:mb-0">
             <dt className="text-sm">Choice</dt>
-            <dd className="text-sm font-medium">blahbalh</dd>
+            <dd className="max-w-[200px] truncate text-sm font-medium">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>{choice}</span>
+                  </TooltipTrigger>
+                  <TooltipContent align="start" className="max-w-[300px] text-wrap">
+                    {choice}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </dd>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="mb-[2px] flex justify-between">
+            <dt className="relative text-sm">Snapshot</dt>
+            <dd className="text-sm font-medium">blocknumber</dd>
+          </div>
+          <div className="flex justify-between">
             <dt className="relative text-sm">
               Your voting power
               <TooltipProvider>

@@ -1,10 +1,25 @@
-import { createConfig, configureChains } from "wagmi";
-import { mantle, mantleTestnet } from "wagmi/chains";
+import { createConfig, configureChains, Chain } from "wagmi";
+import { mantle } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { getDefaultConfig } from "connectkit";
 
+const anvil = {
+  id: 5000,
+  name: "Anvil",
+  network: "Anvil",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Mantle",
+    symbol: "MNT",
+  },
+  rpcUrls: {
+    public: { http: ["http://localhost:8545"] },
+    default: { http: ["http://localhost:8545"] },
+  },
+} as const satisfies Chain;
+
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mantle, mantleTestnet],
+  [process.env.NODE_ENV === "development" ? anvil : mantle],
   [publicProvider()],
 );
 
@@ -28,3 +43,5 @@ export const config = createConfig(
     appIcon: "https://family.co/logo.png", // your app's icon, no bigger than 1024x1024px (max. 1MB)
   }),
 );
+
+export const chainId = process.env.NODE_ENV === "development" ? anvil.id : mantle.id;

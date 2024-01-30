@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 
 /**
  * TODO:
- * 6. modal
  * 7. vote off-chain
  * 8. database
  */
