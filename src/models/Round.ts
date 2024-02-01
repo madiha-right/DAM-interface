@@ -61,4 +61,4 @@ const RoundSchema = new mongoose.Schema<IRound>(
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } },
 );
 
-export default mongoose.model<IRound>(ModelNames.Round, RoundSchema);
+export default mongoose.models.Round || mongoose.model<IRound>(ModelNames.Round, RoundSchema);

@@ -1,19 +1,15 @@
 import React from "react";
 import { getCurrentRound } from "@/actions/rounds";
+import { getProtocolsAuto } from "@/actions/protocols";
 import { formatTimestamp } from "@/utils/times";
-
-// TODO: mock to real data -> server side with api call
-const mock_headerList = [
-  { title: "Accumulated incentive", value: "420ETH" },
-  { title: "Total No. of projects", value: "99" },
-  { title: "Auto <> Comm Ratio", value: "40 : 60" },
-  { title: "Link", value: "https://blahbalh" },
-];
+import HeaderStatusList from "./HeaderStatusList";
 
 interface IProps {}
 
 const HeaderStatus: React.FC<IProps> = async () => {
   const round = await getCurrentRound();
+  const protocols = await getProtocolsAuto(); // TODO: there could be some projects that are only listed in the community stream
+  const autoStreamRatio = (round?.autoStreamRatio as number) / 100;
 
   return (
     <header className={"mb-[19px] overflow-hidden rounded-xl border border-border"}>
@@ -22,16 +18,11 @@ const HeaderStatus: React.FC<IProps> = async () => {
           ? `DAM Round #${round.id} - [ ${formatTimestamp(round.startTime as bigint)} ~ ${formatTimestamp(round.endTime as bigint)} ]`
           : "DAM Round Not Started"}
       </h1>
-      <dl className="flex px-[20px] py-[15px]">
-        {mock_headerList.map((item, index) => (
-          <div key={index} className="relative flex-1 pl-[10px]">
-            <dt className="mb-[7px] text-xs font-medium after:absolute after:left-0 after:top-[2px] after:inline-block after:h-[11px] after:w-[1px] after:bg-mantle-teal">
-              {item.title}
-            </dt>
-            <dd className="text-xl font-semibold">{item.value}</dd>
-          </div>
-        ))}
-      </dl>
+      <HeaderStatusList
+        isRoundOngoing={!!round}
+        autoStreamRatio={autoStreamRatio}
+        projectsNum={protocols.length}
+      />
     </header>
   );
 };

@@ -21,23 +21,21 @@ type MantleJourneyDataType = {
   website: UrlType;
 };
 
-export type ProtocolAutoType = {
-  _id: mongoose.Types.ObjectId;
-  protocol: string;
+type ProtocolStatType = {
   txCount?: number;
   tvl?: number;
   milesToday: number;
   milesAccumulated: number;
+};
+
+export type ProtocolAutoType = {
+  _id: mongoose.Types.ObjectId;
+  protocol: string;
+  stat: ProtocolStatType;
   categories: string[];
   name: string;
   website: UrlType;
 };
-
-/**
- * TODO:
- * 1. on start round, save the protocol data to the database
- * 2. on end round, compare current protocol data to the saved data
- */
 
 export const getProtocolsAuto = async (): Promise<ProtocolAutoType[] | []> => {
   try {
@@ -48,7 +46,7 @@ export const getProtocolsAuto = async (): Promise<ProtocolAutoType[] | []> => {
 
     const data = mergeData(txn, tvl);
 
-    return data;
+    return data.filter((item) => item.stat.milesToday >= 1 && item.stat.milesAccumulated >= 1);
   } catch (error) {
     console.error("error", error);
     return [];
@@ -211,33 +209,40 @@ const mergeData = (
 
   for (const item of transactionsData) {
     // eslint-disable-next-line no-unused-vars
-    const { rank, type, categories, ...rest } = item; // Destructuring to exclude
+    const { rank, type, categories, stat, ...rest } = item; // Destructuring to exclude
     combined[item.protocol] = {
       ...rest,
       categories: item.categories,
-      txCount: item.stat.value,
-      milesToday: item.stat.miles,
-      milesAccumulated: item.stat.cumulateMiles,
+      stat: {
+        txCount: item.stat.value,
+        milesToday: item.stat.miles,
+        milesAccumulated: item.stat.cumulateMiles,
+      },
     };
   }
 
   for (const item of tvlData) {
     // eslint-disable-next-line no-unused-vars
-    const { rank, type, categories, ...rest } = item; // Destructuring to exclude
+    const { rank, type, categories, stat, ...rest } = item; // Destructuring to exclude
     if (combined[item.protocol]) {
       combined[item.protocol] = {
         ...combined[item.protocol],
-        tvl: item.stat.value,
-        milesToday: combined[item.protocol].milesToday + item.stat.miles,
-        milesAccumulated: combined[item.protocol].milesAccumulated + item.stat.cumulateMiles,
+        stat: {
+          ...combined[item.protocol].stat,
+          tvl: item.stat.value,
+          milesToday: combined[item.protocol].stat.milesToday + item.stat.miles,
+          milesAccumulated: combined[item.protocol].stat.milesAccumulated + item.stat.cumulateMiles,
+        },
       };
     } else {
       combined[item.protocol] = {
         ...rest,
         categories: item.categories,
-        tvl: item.stat.value,
-        milesToday: item.stat.miles,
-        milesAccumulated: item.stat.cumulateMiles,
+        stat: {
+          tvl: item.stat.value,
+          milesToday: item.stat.miles,
+          milesAccumulated: item.stat.cumulateMiles,
+        },
       };
     }
   }

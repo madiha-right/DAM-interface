@@ -1,3 +1,6 @@
+import { formatEther } from "viem";
+import { PRECISION } from "@/utils/constants";
+
 export const formatNumberToDollar = (amount: number): string => {
   let formattedNumber: string;
 
@@ -28,4 +31,20 @@ export const formatPercentage = (value: number): string => {
   }
   // If it's not an integer, return it with one decimal place
   return percentage.toFixed(1) + "%";
+};
+
+export const formatEtherWithPrecision = (value: bigint, precision = PRECISION.long) => {
+  // Use formatEther from viem to convert the value to a string
+  const etherString = formatEther(value);
+
+  // Split the string into two parts [before the decimal, after the decimal]
+  const parts = etherString.split(".");
+
+  if (parts.length === 2) {
+    const decimalPart = parts[1].slice(0, precision); // Get only the first 'precision' digits
+    return `${parts[0]}.${decimalPart}`; // Combine the whole part with the truncated decimal part
+  } else {
+    // In case the value is an integer and doesn't have a decimal part
+    return parts[0];
+  }
 };

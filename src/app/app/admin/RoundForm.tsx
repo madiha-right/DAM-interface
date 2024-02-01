@@ -27,10 +27,10 @@ import Spinner from "@/components/ui/Spinner";
 interface IProps {}
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: "Name is required" })
-    .max(50, { message: "Name should be less than 50 characters" }),
+  // name: z
+  //   .string()
+  //   .min(1, { message: "Name is required" })
+  //   .max(50, { message: "Name should be less than 50 characters" }),
   period: z.preprocess(
     (val) => Number(val),
     z.number().min(1).max(500, { message: "Epoch length is too long" }),
@@ -43,18 +43,13 @@ const formSchema = z.object({
   ),
 });
 
-/**
- * TODO:
- * 6. save name to database
- * 7. name validation
- */
 const deadline = getDeadline(DEADLINE);
 
 const RoundForm: React.FC<IProps> = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      // name: "",
       period: 30,
       reinvestmentRatio: [500],
       autoStreamRatio: [5000],
@@ -130,7 +125,7 @@ const RoundForm: React.FC<IProps> = () => {
       !approval.data ||
       !!form.formState.errors.depositAmount ||
       !!form.formState.errors.period ||
-      !!form.formState.errors.name ||
+      // !!form.formState.errors.name ||
       damOperationWithPermit.isLoading
     );
   };
@@ -141,7 +136,7 @@ const RoundForm: React.FC<IProps> = () => {
         <h2 className="text-xl font-semibold leading-[28px]">Settings</h2>
         <Separator className="my-[16px]" />
         <fieldset className="flex flex-col space-y-[34px] pb-[16px]">
-          <FormField
+          {/* <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
@@ -158,7 +153,7 @@ const RoundForm: React.FC<IProps> = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="period"

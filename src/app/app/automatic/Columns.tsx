@@ -24,6 +24,7 @@ export const columns: ColumnDef<ProtocolAutoType>[] = [
   },
   {
     accessorKey: ColumnKeys.Tvl,
+    accessorFn: (row) => row.stat.tvl,
     header: getHeaderName(ColumnKeys.Tvl),
     cell: ({ row }) => {
       const tvl = parseFloat(row.getValue(ColumnKeys.Tvl));
@@ -34,16 +35,22 @@ export const columns: ColumnDef<ProtocolAutoType>[] = [
   },
   {
     accessorKey: ColumnKeys.TxCount,
+    accessorFn: (row) => {
+      // console.log("tx count", row.stat);
+      return row.stat.txCount;
+    },
     header: getHeaderName(ColumnKeys.TxCount),
     cell: ({ row }) => {
-      const tvl = parseFloat(row.getValue(ColumnKeys.TxCount));
-      const formatted = formatCount(tvl);
+      // console.log(row.getValue(ColumnKeys.TxCount));
+      const txCount = parseFloat(row.getValue(ColumnKeys.TxCount));
+      const formatted = formatCount(txCount);
 
       return <>{formatted}</>;
     },
   },
   {
     accessorKey: ColumnKeys.MilesToday,
+    accessorFn: (row) => row.stat.milesToday,
     header: ({ column }) => {
       return (
         <Button
@@ -67,6 +74,7 @@ export const columns: ColumnDef<ProtocolAutoType>[] = [
   },
   {
     accessorKey: ColumnKeys.MilesAccumulated,
+    accessorFn: (row) => row.stat.milesAccumulated,
     header: ({ column }) => {
       return (
         <Button

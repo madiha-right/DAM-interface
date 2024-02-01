@@ -15,6 +15,8 @@ type RoundType = {
   id: number;
   startTime: bigint;
   endTime: bigint;
+  reinvestmentRatio: number;
+  autoStreamRatio: number;
 };
 
 const currentRoundQuery: TypedDocumentNode<{ rounds: RoundType[] }> = parse(gql`
@@ -23,6 +25,8 @@ const currentRoundQuery: TypedDocumentNode<{ rounds: RoundType[] }> = parse(gql`
       id
       startTime
       endTime
+      autoStreamRatio
+      reinvestmentRatio
     }
   }
 `);
@@ -52,22 +56,18 @@ export const startRound = async () => {
       throw new Error("No current round found");
     }
 
-    const protocols = protocolsAuto
-      .map(
-        (protocol): IProtocol => ({
-          _id: protocol._id as unknown as mongoose.Types.ObjectId,
-          name: protocol.name,
-          categories: protocol.categories,
-          website: protocol.website,
-          stat: {
-            milesOnStart: protocol.milesToday,
-            milesAccumulatedOnStart: protocol.milesAccumulated,
-          },
-        }),
-      )
-      .filter(
-        (protocol) => protocol.stat.milesOnStart > 0 && protocol.stat.milesAccumulatedOnStart > 0,
-      );
+    const protocols = protocolsAuto.map(
+      (protocol): IProtocol => ({
+        _id: protocol._id as unknown as mongoose.Types.ObjectId,
+        name: protocol.name,
+        categories: protocol.categories,
+        website: protocol.website,
+        stat: {
+          milesOnStart: protocol.stat.milesToday,
+          milesAccumulatedOnStart: protocol.stat.milesAccumulated,
+        },
+      }),
+    );
 
     await dbConnect();
 
@@ -83,6 +83,7 @@ export const startRound = async () => {
   }
 };
 
+// TODO: auto <> community ratio
 export const endRound = async () => {
   try {
     const currentRound = await getCurrentRound();
@@ -124,8 +125,8 @@ const insertMilesOnEnd = async (roundId: number): Promise<IRound> => {
 
   for (const item of protocolsAuto) {
     if (combined[item._id.toString()]) {
-      combined[item._id.toString()].stat.milesOnEnd = item.milesToday;
-      combined[item._id.toString()].stat.milesAccumulatedOnEnd = item.milesAccumulated;
+      combined[item._id.toString()].stat.milesOnEnd = item.stat.milesToday;
+      combined[item._id.toString()].stat.milesAccumulatedOnEnd = item.stat.milesAccumulated;
     }
   }
 
@@ -144,6 +145,9 @@ const insertMilesOnEnd = async (roundId: number): Promise<IRound> => {
   return updatedRound;
 };
 
+// TODO: endround script
+
+// TODO: auto <> community ratio
 const calcDistributions = (protocols: IProtocol[]) => {
   const receivers: Address[] = [];
   const proportions: number[] = [];
