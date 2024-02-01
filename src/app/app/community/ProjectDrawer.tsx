@@ -48,7 +48,7 @@ const ProjectDrawer: React.FC<IProps> = (props) => {
             <DrawerTitle className="mb-[8px] flex items-center justify-between text-2xl">
               {protocol.name}
               <Badge className="rounded-full bg-foreground px-[13px] py-0 font-medium text-background">
-                {protocol.category}
+                {protocol.categories[0]}
               </Badge>
             </DrawerTitle>
             <DrawerDescription className="mb-[15px] text-sm text-foreground">

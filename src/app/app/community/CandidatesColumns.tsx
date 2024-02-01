@@ -15,8 +15,8 @@ export const candidatesColumns: ColumnDef<ProtocolCommunityType>[] = [
     header: getHeaderName(ColumnKeys.Name),
   },
   {
-    accessorKey: ColumnKeys.Category,
-    header: getHeaderName(ColumnKeys.Category),
+    accessorKey: ColumnKeys.Categories,
+    header: getHeaderName(ColumnKeys.Categories),
   },
   {
     accessorKey: ColumnKeys.ReceivedWeight,

@@ -1,5 +1,10 @@
 import type { Address } from "viem";
 
+export enum ModelNames {
+  // eslint-disable-next-line no-unused-vars
+  Round = "Round",
+}
+
 type ContractAddresses = {
   protocol: {
     dam: Address;

@@ -13,8 +13,14 @@ export const columns: ColumnDef<ProtocolAutoType>[] = [
     header: getHeaderName(ColumnKeys.Name),
   },
   {
-    accessorKey: ColumnKeys.Category,
-    header: getHeaderName(ColumnKeys.Category),
+    accessorKey: ColumnKeys.Categories,
+    header: getHeaderName(ColumnKeys.Categories),
+    cell: ({ row }) => {
+      const categories = row.getValue(ColumnKeys.Categories) as string[];
+      const category = categories[0];
+
+      return <span>{category}</span>;
+    },
   },
   {
     accessorKey: ColumnKeys.Tvl,

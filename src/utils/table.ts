@@ -2,7 +2,7 @@
 
 export enum ColumnKeys {
   Name = "name",
-  Category = "category",
+  Categories = "categories",
   Tvl = "tvl",
   TxCount = "txCount",
   MilesToday = "milesToday",
@@ -16,7 +16,7 @@ export const getHeaderName = (key: ColumnKeys) => {
   switch (key) {
     case ColumnKeys.Name:
       return "Name";
-    case ColumnKeys.Category:
+    case ColumnKeys.Categories:
       return "Category";
     case ColumnKeys.Tvl:
       return "TVL";

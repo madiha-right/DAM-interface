@@ -1,8 +1,8 @@
+import mongoose from "mongoose";
 import { UrlType } from "@/types";
 import { MANTLE_JOURNEY_BASE_URL } from "@/utils/site";
 
 type Stat = {
-  _id: string;
   value: number;
   miles: number;
   cumulateMiles: number;
@@ -11,26 +11,26 @@ type Stat = {
 };
 
 type MantleJourneyDataType = {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   protocol: string;
   type?: string;
   stat: Stat;
   rank?: number;
   categories: string[];
   name: string;
-  website: string;
+  website: UrlType;
 };
 
 export type ProtocolAutoType = {
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   protocol: string;
   txCount?: number;
   tvl?: number;
   milesToday: number;
   milesAccumulated: number;
-  category: string;
+  categories: string[];
   name: string;
-  website: string;
+  website: UrlType;
 };
 
 /**
@@ -64,7 +64,7 @@ type AdditionalInfoType = {
 export type ProtocolCommunityType = {
   id: string;
   name: string;
-  category: string;
+  categories: string[];
   weight: number;
   title: string;
   description: string;
@@ -83,7 +83,7 @@ export const getProtocolsCommunity = (): ProtocolCommunityType[] | [] => {
     {
       id: "1222",
       name: "Aave",
-      category: "Defi",
+      categories: ["Defi"],
       weight: 0,
       title:
         "Aave is an open source and non-custodial protocol enabling the creation of money markets.",
@@ -107,7 +107,7 @@ export const getProtocolsCommunity = (): ProtocolCommunityType[] | [] => {
     {
       id: "122233",
       name: "Compound",
-      category: "Defi",
+      categories: ["Defi"],
       weight: 0,
       title:
         "Aave is an open source and non-custodial protocol enabling the creation of money markets.",
@@ -131,7 +131,7 @@ export const getProtocolsCommunity = (): ProtocolCommunityType[] | [] => {
     {
       id: "132",
       name: "Uniswap",
-      category: "Defi",
+      categories: ["Defi"],
       weight: 0,
       title:
         "Uniswap is an open source and non-custodial protocol enabling the creation of money markets.",
@@ -155,7 +155,7 @@ export const getProtocolsCommunity = (): ProtocolCommunityType[] | [] => {
     {
       id: "1255552",
       name: "Dam",
-      category: "Infrastructure",
+      categories: ["Infrastructure"],
       weight: 0,
       title:
         "Dam is an open source and non-custodial protocol enabling the creation of money markets.",
@@ -179,7 +179,7 @@ export const getProtocolsCommunity = (): ProtocolCommunityType[] | [] => {
     {
       id: "122200000",
       name: "Axie Infinity",
-      category: "Gaming",
+      categories: ["Gaming"],
       weight: 0,
       title:
         "Axie Infinity is an open source and non-custodial protocol enabling the creation of money markets.",
@@ -214,7 +214,7 @@ const mergeData = (
     const { rank, type, categories, ...rest } = item; // Destructuring to exclude
     combined[item.protocol] = {
       ...rest,
-      category: item.categories[0],
+      categories: item.categories,
       txCount: item.stat.value,
       milesToday: item.stat.miles,
       milesAccumulated: item.stat.cumulateMiles,
@@ -234,7 +234,7 @@ const mergeData = (
     } else {
       combined[item.protocol] = {
         ...rest,
-        category: item.categories[0],
+        categories: item.categories,
         tvl: item.stat.value,
         milesToday: item.stat.miles,
         milesAccumulated: item.stat.cumulateMiles,

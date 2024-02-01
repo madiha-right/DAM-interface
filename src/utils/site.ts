@@ -24,7 +24,10 @@ export const siteConfig: SiteConfig = {
   // },
 };
 
-const DAM_SUBGRAPH_BASE_URL = "https://subgraph-api.mantle.xyz";
+const DAM_SUBGRAPH_BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:8000"
+    : "https://subgraph-api.mantle.xyz";
 export const DAM_SUBGRAPH_URL = `${DAM_SUBGRAPH_BASE_URL}/subgraphs/name/test`;
 
 export const MANTLE_JOURNEY_BASE_URL = "https://mdi-quests-api-production.up.railway.app";

@@ -18,7 +18,9 @@ const HeaderStatus: React.FC<IProps> = async () => {
   return (
     <header className={"mb-[19px] overflow-hidden rounded-xl border border-border"}>
       <h1 className="bg-gradient-to-b from-[#6AB6B1] via-[#6AB6B1]/90 via-35% to-[#c5e6e3]/90 py-[4px] pl-[18px] text-lg font-semibold text-background">
-        {`DAM Round #${round.id} - [ ${formatTimestamp(round.startTime as bigint)} ~ ${formatTimestamp(round.endTime as bigint)} ]`}
+        {round
+          ? `DAM Round #${round.id} - [ ${formatTimestamp(round.startTime as bigint)} ~ ${formatTimestamp(round.endTime as bigint)} ]`
+          : "DAM Round Not Started"}
       </h1>
       <dl className="flex px-[20px] py-[15px]">
         {mock_headerList.map((item, index) => (
