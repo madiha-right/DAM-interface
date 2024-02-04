@@ -1,5 +1,5 @@
 import { Address, useContractRead, useSignTypedData } from "wagmi";
-import { chainId } from "@/lib/wagmi";
+import { chain } from "@/lib/viem";
 import METHL2 from "@/abis/METHL2.json";
 
 type ArgsType = {
@@ -34,7 +34,7 @@ export const usePermit = (args: ArgsType) => {
   const domain = {
     name: "mETH",
     version: "1",
-    chainId: chainId,
+    chainId: chain.id,
     verifyingContract: token,
   };
 

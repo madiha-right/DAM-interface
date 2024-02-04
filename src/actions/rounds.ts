@@ -4,8 +4,9 @@ import mongoose from "mongoose";
 import { parse } from "graphql";
 import { gql, request } from "graphql-request";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import { Address, encodeAbiParameters, hexToSignature, parseAbiParameters } from "viem";
-import { publicClient, oracle } from "@/lib/viem";
+import { Address, encodeAbiParameters, hexToSignature, keccak256, parseAbiParameters } from "viem";
+import { privateKeyToAccount } from "viem/accounts";
+import { ethereumPublicClient } from "@/lib/viem";
 import dbConnect from "@/lib/dbConnect";
 import Round, { type IProtocol, type IRound, type IStat } from "@/models/Round";
 import { getProtocolsAuto } from "@/actions/protocols";
@@ -34,6 +35,7 @@ const currentRoundQuery: TypedDocumentNode<{ rounds: RoundType[] }> = parse(gql`
 export const getCurrentRound = async () => {
   try {
     const res = await request(DAM_SUBGRAPH_URL, currentRoundQuery);
+    console.log("subgraph", res.rounds);
     const data = res.rounds[0];
 
     return data;
@@ -44,7 +46,7 @@ export const getCurrentRound = async () => {
 
 export const startRound = async () => {
   try {
-    const blockNumber = await publicClient.getBlockNumber();
+    const blockNumber = await ethereumPublicClient.getBlockNumber();
     const snapshotBlockNumber = blockNumber - BigInt(1);
     const protocolsAuto = await getProtocolsAuto();
     const currentRound = await getCurrentRound();
@@ -84,9 +86,10 @@ export const startRound = async () => {
 };
 
 // TODO: auto <> community ratio
-export const endRound = async () => {
+export const fetchEndRoundData = async () => {
   try {
     const currentRound = await getCurrentRound();
+    const oracle = privateKeyToAccount(process.env.ORACLE_PRIVATE_KEY);
 
     if (!currentRound) {
       throw new Error("No current round found from subgraph");
@@ -94,7 +97,14 @@ export const endRound = async () => {
 
     const round = await insertMilesOnEnd(currentRound.id);
     const data = calcDistributions(round.protocols);
-    const hexSignature = await oracle.signMessage({ message: data });
+
+    // const receivers: Address[] = ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"];
+    // const proportions: number[] = [10000];
+    // const data = encodeAbiParameters(parseAbiParameters("address[], uint16[]"), [
+    //   receivers,
+    //   proportions,
+    // ]);
+    const hexSignature = await oracle.signMessage({ message: { raw: keccak256(data) } });
     const signature = hexToSignature(hexSignature);
 
     return {
@@ -145,8 +155,6 @@ const insertMilesOnEnd = async (roundId: number): Promise<IRound> => {
   return updatedRound;
 };
 
-// TODO: endround script
-
 // TODO: auto <> community ratio
 const calcDistributions = (protocols: IProtocol[]) => {
   const receivers: Address[] = [];
@@ -178,7 +186,9 @@ const calcDistributions = (protocols: IProtocol[]) => {
     leftProportion -= proportion;
   }
 
-  return encodeAbiParameters(parseAbiParameters("address[], uint16[]"), [receivers, proportions]);
+  return keccak256(
+    encodeAbiParameters(parseAbiParameters("address[], uint16[]"), [receivers, proportions]),
+  );
 };
 
 const calcPoints = (stat: IStat) => {

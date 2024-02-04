@@ -31,3 +31,6 @@ const DAM_SUBGRAPH_BASE_URL =
 export const DAM_SUBGRAPH_URL = `${DAM_SUBGRAPH_BASE_URL}/subgraphs/name/test`;
 
 export const MANTLE_JOURNEY_BASE_URL = "https://mdi-quests-api-production.up.railway.app";
+
+export const MANTLE_RPC_URL =
+  process.env.NODE_ENV === "development" ? "http://localhost:8545" : "https://rpc.mantle.xyz";

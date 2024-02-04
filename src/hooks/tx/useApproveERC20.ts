@@ -25,8 +25,8 @@ export const useApproveERC20 = (args: ArgsType) => {
     address: token,
     abi: erc20ABI,
     functionName: "approve",
-    onError(err) {
-      console.log(err);
+    onError(error) {
+      console.error(error);
       toast(TOAST_ERROR);
     },
   });
@@ -35,14 +35,15 @@ export const useApproveERC20 = (args: ArgsType) => {
     hash: writeApprove.data?.hash,
     onSuccess(data) {
       if (data.status === "reverted") {
+        console.error("Transaction reverted");
         toast(TOAST_ERROR);
         return;
       }
       toast(TOAST_SUCCESS);
       readAllowance.refetch();
     },
-    onError(err) {
-      console.log(err);
+    onError(error) {
+      console.error(error);
       toast(TOAST_ERROR);
     },
   });

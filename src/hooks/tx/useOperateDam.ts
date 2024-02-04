@@ -14,7 +14,8 @@ export const useOperateDam = (args: ArgsType) => {
     address: CONTRACT_ADDRESSES.protocol.dam,
     abi: DamAbi.abi,
     functionName: "operateDam",
-    onError() {
+    onError(error) {
+      console.error(error);
       toast(TOAST_ERROR);
     },
   });
@@ -23,13 +24,15 @@ export const useOperateDam = (args: ArgsType) => {
     hash: writeOperateDam.data?.hash,
     onSuccess(data) {
       if (data.status === "reverted") {
+        console.error("Transaction reverted");
         toast(TOAST_ERROR);
         return;
       }
       toast(TOAST_SUCCESS);
       args.onSuccess?.();
     },
-    onError() {
+    onError(error) {
+      console.error(error);
       toast(TOAST_ERROR);
     },
   });
@@ -48,7 +51,8 @@ export const useOperateDamWithPermit = (args: ArgsType) => {
     address: CONTRACT_ADDRESSES.protocol.dam,
     abi: DamAbi.abi,
     functionName: "operateDamWithPermit",
-    onError() {
+    onError(error) {
+      console.error(error);
       toast(TOAST_ERROR);
     },
   });
@@ -57,13 +61,15 @@ export const useOperateDamWithPermit = (args: ArgsType) => {
     hash: writeOperateDamWithPermit.data?.hash,
     onSuccess(data) {
       if (data.status === "reverted") {
+        console.error("Transaction reverted");
         toast(TOAST_ERROR);
         return;
       }
       toast(TOAST_SUCCESS);
       args.onSuccess?.();
     },
-    onError() {
+    onError(error) {
+      console.error(error);
       toast(TOAST_ERROR);
     },
   });
