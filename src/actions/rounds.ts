@@ -49,20 +49,12 @@ interface IRound extends IRoundBase {
 }
 
 export const getRound = async (roundId: number): Promise<IRound | undefined> => {
-  try {
-    await dbConnect();
+  await dbConnect();
 
-    const round = await Round.findOne({ roundId }).populate("protocols.protocol");
+  const round = await Round.findOne({ roundId }).populate("protocols.protocol");
 
-    if (!round) {
-      throw new Error("No round found");
-    }
-
-    // NOTE: to get startTime, endTime, autoStreamRatio, reinvestmentRatio, add subgraph query by roundId
-    return round;
-  } catch (error) {
-    console.error(error);
-  }
+  // NOTE: to get startTime, endTime, autoStreamRatio, reinvestmentRatio, add subgraph query by roundId
+  return round;
 };
 
 interface ICurrentRound extends IRoundBase {
@@ -73,12 +65,6 @@ interface ICurrentRound extends IRoundBase {
   reinvestmentRatio: number;
 }
 
-/**
- * TODO:
- * 5. update ui using getRound
- * 6. add routes to add protocol to db - add both protocols and round(protocol ids)
- * 6. empty db and test it on ui
- */
 export const startRound = async (): Promise<ICurrentRound | undefined> => {
   try {
     const blockNumber = await ethereumPublicClient.getBlockNumber();
