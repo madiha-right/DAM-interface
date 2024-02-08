@@ -21,7 +21,7 @@ type RoundQueryType = {
   autoStreamRatio: number;
 };
 
-const currentRoundQuery: TypedDocumentNode<{ rounds: RoundQueryType[] }> = parse(gql`
+const currentRoundUpstreamQuery: TypedDocumentNode<{ rounds: RoundQueryType[] }> = parse(gql`
   query currentRound {
     rounds(where: { ongoing: true }) {
       id
@@ -33,12 +33,33 @@ const currentRoundQuery: TypedDocumentNode<{ rounds: RoundQueryType[] }> = parse
   }
 `);
 
-export const queryCurrentRound = async () => {
+export const getCurrentRoundUpstream = async () => {
   try {
-    const res = await request(DAM_SUBGRAPH_URL, currentRoundQuery);
+    const res = await request(DAM_SUBGRAPH_URL, currentRoundUpstreamQuery);
     const data = res.rounds[0];
 
     return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+interface IRound extends IRoundBase {
+  protocols: IProtocolWithStat[];
+}
+
+export const getRound = async (roundId: number): Promise<IRound | undefined> => {
+  try {
+    await dbConnect();
+
+    const round = await Round.findOne({ roundId }).populate("protocols.protocol");
+
+    if (!round) {
+      throw new Error("No round found");
+    }
+
+    // NOTE: to get startTime, endTime, autoStreamRatio, reinvestmentRatio, add subgraph query by roundId
+    return round;
   } catch (error) {
     console.error(error);
   }
@@ -52,24 +73,6 @@ interface ICurrentRound extends IRoundBase {
   reinvestmentRatio: number;
 }
 
-export const getRound = async (roundId: number): Promise<IProtocolWithStat[]> => {
-  try {
-    await dbConnect();
-
-    const round = await Round.findOne({ roundId }).populate("protocols.protocol");
-
-    if (!round) {
-      throw new Error("No round found");
-    }
-
-    // NOTE: to get startTime, endTime, autoStreamRatio, reinvestmentRatio, add subgraph query by roundId
-    return round.protocols;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
 /**
  * TODO:
  * 5. update ui using getRound
@@ -80,7 +83,7 @@ export const startRound = async (): Promise<ICurrentRound | undefined> => {
   try {
     const blockNumber = await ethereumPublicClient.getBlockNumber();
     const snapshotBlockNumber = blockNumber - BigInt(1);
-    const currentRound = await queryCurrentRound();
+    const currentRound = await getCurrentRoundUpstream();
     const protocols = await getProtocols();
     const protocolIdsWithStat = protocols.map((item) => ({
       id: item.protocol._id,
@@ -123,7 +126,7 @@ export const startRound = async (): Promise<ICurrentRound | undefined> => {
 
 export const fetchEndRoundData = async () => {
   try {
-    const currentRound = await queryCurrentRound();
+    const currentRound = await getCurrentRoundUpstream();
     const oracle = privateKeyToAccount(process.env.ORACLE_PRIVATE_KEY);
 
     if (!currentRound) {

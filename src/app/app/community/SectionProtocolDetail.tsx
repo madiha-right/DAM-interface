@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/shadcn";
-import { ProtocolCommunityType } from "@/actions/protocols";
+import type { IProtocolWithStat } from "@/actions/protocols";
 import { useToast } from "@/hooks/useToast";
 import { useCandidates, useToggleCandidateList } from "@/hooks/global/useCandidates";
 import { useSelectedRowId } from "@/hooks/global/useSelectedRowId";
@@ -11,33 +11,31 @@ import ProtocolDetailCard from "./ProtocolDetailCard";
 import DialogVoteButton from "./DialogVoteButton";
 
 interface IProps {
-  protocols: ProtocolCommunityType[];
+  protocols: IProtocolWithStat[];
+  totalVotes?: bigint;
 }
 
-const SectionProtocolDetail: React.FC<IProps> = ({ protocols }) => {
+const SectionProtocolDetail: React.FC<IProps> = ({ protocols, totalVotes }) => {
   const [selectedRowId] = useSelectedRowId();
   const [candidates, setCandidates] = useCandidates();
   const [isOpenCandidateList] = useToggleCandidateList();
   const { toast, dismiss } = useToast();
-  const selectedProtocol = protocols.find((protocol) => protocol._id === selectedRowId);
+  const selectedProtocol = protocols.find((item) => item.protocol._id === selectedRowId);
 
-  const totalProportions = candidates.reduce(
-    (acc, candidate) => acc + (candidate.vote.proportion || 0),
-    0,
-  );
+  const totalBallot = candidates.reduce((acc, candidate) => acc + (candidate.power.ballot || 0), 0);
 
   const isAlreadyInCandidateList = () => {
     if (!selectedProtocol || candidates.length === 0) {
       return false;
     }
-    return candidates.some((candidate) => candidate._id === selectedProtocol._id);
+    return candidates.some((candidate) => candidate.protocol._id === selectedProtocol.protocol._id);
   };
 
   const resetVotes = () => {
     setCandidates((candidates) =>
       candidates.map((candidate) => ({
         ...candidate,
-        vote: { ...candidate.vote, proportion: 0, weight: 0 },
+        power: { ballot: 0, weight: 0 },
       })),
     );
   };
@@ -47,9 +45,9 @@ const SectionProtocolDetail: React.FC<IProps> = ({ protocols }) => {
       return;
     }
 
-    setCandidates((prev) => [...prev, selectedProtocol]);
+    setCandidates((prev) => [...prev, { ...selectedProtocol, power: { ballot: 0, weight: 0 } }]);
     toast({
-      title: `Added "${selectedProtocol.name}" to candidate list`,
+      title: `Added "${selectedProtocol.protocol.name}" to candidate list`,
       description: "You can view your candidate list in the candidate tab",
     });
     setTimeout(() => {
@@ -58,7 +56,7 @@ const SectionProtocolDetail: React.FC<IProps> = ({ protocols }) => {
   };
 
   const handleClickReset = () => {
-    if (totalProportions === 0) {
+    if (totalBallot === 0) {
       return;
     }
 
@@ -68,18 +66,22 @@ const SectionProtocolDetail: React.FC<IProps> = ({ protocols }) => {
   return (
     <section className={cn(!isOpenCandidateList && "pt-[45px]", "w-full max-w-[436px]")}>
       <ProtocolDetailCard
-        protocol={selectedProtocol || null}
+        protocol={selectedProtocol?.protocol}
         isAlreadyInCandidateList={isAlreadyInCandidateList()}
         isOpenCandidateList={isOpenCandidateList}
         handleClickAddToCandidateList={handleClickAddToCandidateList}
       />
       {isOpenCandidateList && (
         <div className="mt-[20px] flex gap-[20px]">
-          <DialogVoteButton candidates={candidates} disabled={totalProportions === 0} />
+          <DialogVoteButton
+            candidates={candidates}
+            disabled={totalBallot === 0}
+            totalVotes={totalVotes}
+          />
           <Button
             variant="outline"
             className="h-[41px] flex-1 rounded-xl"
-            disabled={totalProportions === 0}
+            disabled={totalBallot === 0}
             onClick={handleClickReset}
           >
             Reset

@@ -35,8 +35,8 @@ const CandidatesTable = <TData, TValue>(props: DataTableProps<TData, TValue>) =>
                   <TableHead
                     key={header.id}
                     className={cn(
-                      header.id !== ColumnKeys.VoteProportion && "px-[30px]",
-                      header.id === ColumnKeys.VoteWeight && "text-center",
+                      header.id !== ColumnKeys.PowerBallot && "px-[30px]",
+                      header.id === ColumnKeys.PowerWeight && "text-center",
                       "h-[45px] text-xs font-medium text-muted-foreground",
                     )}
                   >
@@ -64,8 +64,8 @@ const CandidatesTable = <TData, TValue>(props: DataTableProps<TData, TValue>) =>
                     <TableCell
                       key={cell.id}
                       className={cn(
-                        cell.column.id !== ColumnKeys.VoteProportion && "px-[30px]",
-                        cell.column.id === ColumnKeys.VoteWeight && "text-center",
+                        cell.column.id !== ColumnKeys.PowerBallot && "px-[30px]",
+                        cell.column.id === ColumnKeys.PowerWeight && "text-center",
                         "h-[56px] text-sm font-medium",
                       )}
                     >

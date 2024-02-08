@@ -1,8 +1,9 @@
 import { NextPage } from "next";
 import type { Metadata } from "next";
-import { getRound, queryCurrentRound } from "@/actions/rounds";
+import { getProtocols } from "@/actions/protocols";
 import { columns } from "./Columns";
 import DataTable from "../DataTable";
+import { StreamType } from "@/models/Protocol";
 
 export const metadata: Metadata = {
   title: "DAM | Automatic",
@@ -10,12 +11,14 @@ export const metadata: Metadata = {
 };
 
 const AutomaticPage: NextPage = async () => {
-  const currentRound = await queryCurrentRound();
-  const protocols = await getRound(currentRound?.id as number);
+  const protocols = await getProtocols();
+  const protocolsAuto = protocols.filter(
+    (item) => item.protocol.type === StreamType.Auto || item.protocol.type === StreamType.Both,
+  );
 
   return (
     <>
-      <DataTable columns={columns} data={protocols} from="autoStream" />
+      <DataTable columns={columns} data={protocolsAuto} from="autoStream" />
     </>
   );
 };

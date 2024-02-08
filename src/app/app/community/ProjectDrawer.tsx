@@ -1,5 +1,5 @@
 import React from "react";
-import type { ProtocolCommunityType } from "@/actions/protocols";
+import type { IProtocol } from "@/models/Protocol";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -17,7 +17,7 @@ import { IconClose, IconExpand, IconExternalLink } from "@/components/icons";
 import SiteList from "./SiteList";
 
 interface IProps {
-  protocol: ProtocolCommunityType;
+  protocol: IProtocol;
   isAlreadyInCandidateList: boolean;
   isOpenCandidateList: boolean;
   handleClickAddToCandidateList: () => void;
@@ -65,7 +65,7 @@ const ProjectDrawer: React.FC<IProps> = (props) => {
             <section className="mb-[20px]">
               <h3 className="mb-[8px] text-xl font-semibold">Contribution</h3>
               <dl className="rounded-lg border border-border px-[20px] py-[8px]">
-                {protocol.contributions.map((contribution, index) => (
+                {protocol.contributions?.map((contribution, index) => (
                   <div
                     key={index}
                     className="mb-[5px] flex items-center justify-between text-sm font-medium last:mb-0"
@@ -86,7 +86,7 @@ const ProjectDrawer: React.FC<IProps> = (props) => {
             <section>
               <h3 className="mb-[8px] text-xl font-semibold">Metrics / Links</h3>
               <dl className="rounded-lg border border-border px-[20px] py-[8px]">
-                {protocol.metrics.map((metric, index) => (
+                {protocol.metrics?.map((metric, index) => (
                   <div
                     key={index}
                     className="mb-[5px] flex items-center justify-between text-sm font-medium last:mb-0"

@@ -1,13 +1,13 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import type { ProtocolAutoType } from "@/actions/protocols";
+import type { IProtocolWithStat } from "@/actions/protocols";
 import { formatCount, formatNumberToDollar } from "@/utils/format";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
 import { Button } from "@/components/ui/Button";
 import ArrowUpDown from "@/components/icons/IconArrowUpDown";
 
-export const columns: ColumnDef<ProtocolAutoType>[] = [
+export const columns: ColumnDef<IProtocolWithStat>[] = [
   {
     accessorKey: ColumnKeys.Name,
     header: getHeaderName(ColumnKeys.Name),
@@ -46,7 +46,7 @@ export const columns: ColumnDef<ProtocolAutoType>[] = [
   },
   {
     accessorKey: ColumnKeys.MilesToday,
-    accessorFn: (row) => row.stat.milesToday,
+    accessorFn: (row) => row.stat.miles.today,
     header: ({ column }) => {
       return (
         <Button
@@ -70,7 +70,7 @@ export const columns: ColumnDef<ProtocolAutoType>[] = [
   },
   {
     accessorKey: ColumnKeys.MilesAccumulated,
-    accessorFn: (row) => row.stat.milesAccumulated,
+    accessorFn: (row) => row.stat.miles.accumulated,
     header: ({ column }) => {
       return (
         <Button

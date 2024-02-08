@@ -1,5 +1,5 @@
 import React from "react";
-import { ProtocolCommunityType } from "@/actions/protocols";
+import type { ICandidate } from "@/hooks/global/useCandidates";
 import { formatPercentage } from "@/utils/format";
 import { Button } from "@/components/ui/Button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/Tooltip";
@@ -15,17 +15,24 @@ import {
 import IconInfo from "@/components/icons/IconInfo";
 
 interface IProps {
-  candidates: ProtocolCommunityType[];
+  candidates: ICandidate[];
   disabled: boolean;
+  totalVotes?: bigint;
 }
+
 /**
  * TODO:
  * 3. get voting power from https://api.delegatevote.mantle.xyz/graphql?query=query+GetDelegate+%7B%0A++delegates%28block%3A+19455119%2C+where%3A+%7Bid%3A+%220xbc66065e9640Df94338c6956297ca90ec116651d%22%7D%29+%7B%0A++++votes%0A++++id%0A++++bitVotes%0A++++l2MntVotes%0A++++mntVotes%0A++%7D%0A%7D#
  */
-const DialogVoteButton: React.FC<IProps> = ({ candidates, disabled }) => {
+const DialogVoteButton: React.FC<IProps> = ({ candidates, disabled, totalVotes }) => {
   const choice = candidates
-    .filter((candidate) => (candidate.voteWeight as number) > 0)
-    .map((candidate) => `${formatPercentage(candidate.voteWeight as number)} for ${candidate.name}`)
+    .filter((candidate) => (candidate.power.ballot as number) > 0)
+    .map((candidate) => {
+      const weight = totalVotes
+        ? Number((candidate.stat.votes?.total || BigInt(0)) / totalVotes)
+        : 0;
+      return `${formatPercentage(weight)} for ${candidate.protocol.name}`;
+    })
     .join(", ");
 
   return (

@@ -1,17 +1,21 @@
 "use client";
 
 import React from "react";
+import { usePathname } from "next/navigation";
 import { useReadRoundIncentive } from "@/hooks/useReadRoundIncentive";
+import { ROUTES } from "@/utils/routes";
 import { Skeleton } from "@/components/ui/Skeleton";
 
 interface IProps {
   isRoundOngoing: boolean;
   autoStreamRatio: number;
-  projectsNum: number;
+  autoStreamCount: number;
+  communityStreamCount: number;
 }
 
 const HeaderStatusList: React.FC<IProps> = (props) => {
-  const { isRoundOngoing, autoStreamRatio, projectsNum } = props;
+  const { isRoundOngoing, autoStreamRatio, autoStreamCount, communityStreamCount } = props;
+  const pathname = usePathname();
   const roundIncentive = useReadRoundIncentive();
 
   const list = [
@@ -19,7 +23,10 @@ const HeaderStatusList: React.FC<IProps> = (props) => {
       title: "Accumulated incentive",
       value: isRoundOngoing ? `${roundIncentive.accmulatedIncentive}ETH` : "-",
     },
-    { title: "Total No. of projects", value: projectsNum },
+    {
+      title: "Total No. of projects",
+      value: pathname === ROUTES.app.automatic ? autoStreamCount : communityStreamCount,
+    },
     {
       title: "Auto <> Comm Ratio",
       value: isRoundOngoing ? `${autoStreamRatio} : ${100 - autoStreamRatio}` : "-",

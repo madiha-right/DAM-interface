@@ -13,14 +13,7 @@ import { getDeadline, daysToSeconds } from "@/utils/times";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Separator } from "@/components/ui/Seperator";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/Form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/Form"; // prettier-ignore
 import { Slider } from "@/components/ui/Slider";
 import Spinner from "@/components/ui/Spinner";
 

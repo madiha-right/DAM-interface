@@ -7,9 +7,9 @@ export enum ColumnKeys {
   TxCount = "txCount",
   MilesToday = "milesToday",
   MilesAccumulated = "milesAccumulated",
-  ReceivedWeight = "weight",
-  VoteProportion = "voteProportion",
-  VoteWeight = "voteWeight",
+  VotesProtocol = "votesProtocol",
+  PowerBallot = "powerBallot",
+  PowerWeight = "powerWeight",
 }
 
 export const getHeaderName = (key: ColumnKeys) => {
@@ -26,11 +26,11 @@ export const getHeaderName = (key: ColumnKeys) => {
       return "Miles received today";
     case ColumnKeys.MilesAccumulated:
       return "Miles Accumulated";
-    case ColumnKeys.ReceivedWeight:
+    case ColumnKeys.VotesProtocol:
       return "Received";
-    case ColumnKeys.VoteProportion:
+    case ColumnKeys.PowerBallot:
       return "";
-    case ColumnKeys.VoteWeight:
+    case ColumnKeys.PowerWeight:
       return "Weight";
     default:
       return "Wrong Key";

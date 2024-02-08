@@ -22,6 +22,12 @@ export const formatCount = (count: number): string => {
   return count.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+/**
+ * @notice Format a number as a percentage
+ * @param value A number between 0 and 1
+ * @returns A string representing the percentage
+ * @example formatPercentage(0.123) => "12.3%"
+ */
 export const formatPercentage = (value: number): string => {
   const percentage = value * 100;
   // Check if the percentage is an integer

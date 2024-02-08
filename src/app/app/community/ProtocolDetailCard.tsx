@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/shadcn";
-import type { ProtocolCommunityType } from "@/actions/protocols";
+import { IProtocol } from "@/models/Protocol";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card" // prettier-ignore
 import { Separator } from "@/components/ui/Seperator";
 import { Button } from "@/components/ui/Button";
@@ -8,7 +8,7 @@ import ProjectDrawer from "./ProjectDrawer";
 import SiteList from "./SiteList";
 
 interface IProps {
-  protocol: ProtocolCommunityType | null;
+  protocol?: IProtocol;
   isAlreadyInCandidateList: boolean;
   isOpenCandidateList: boolean;
   handleClickAddToCandidateList: () => void;

@@ -1,14 +1,16 @@
 import React from "react";
-import { queryCurrentRound } from "@/actions/rounds";
-import { getAutoStreamProtocols } from "@/actions/protocols";
+import { getCurrentRoundUpstream } from "@/actions/rounds";
+import { IProtocolWithStat, getProtocols } from "@/actions/protocols";
 import { formatTimestamp } from "@/utils/times";
 import HeaderStatusList from "./HeaderStatusList";
+import { StreamType } from "@/models/Protocol";
 
 interface IProps {}
 
 const HeaderStatus: React.FC<IProps> = async () => {
-  const round = await queryCurrentRound();
-  const protocols = await getAutoStreamProtocols(); // TODO: there could be some projects that are only listed in the community stream
+  const round = await getCurrentRoundUpstream();
+  const protocols = await getProtocols();
+  const { autoStreamCount, communityStreamCount } = getProtocolsCount(protocols);
   const autoStreamRatio = (round?.autoStreamRatio as number) / 100;
 
   return (
@@ -21,10 +23,35 @@ const HeaderStatus: React.FC<IProps> = async () => {
       <HeaderStatusList
         isRoundOngoing={!!round}
         autoStreamRatio={autoStreamRatio}
-        projectsNum={protocols.length}
+        autoStreamCount={autoStreamCount}
+        communityStreamCount={communityStreamCount}
       />
     </header>
   );
 };
 
 export default HeaderStatus;
+
+const getProtocolsCount = (protocols: IProtocolWithStat[]) => {
+  let autoStreamCount = 0;
+  let communityStreamCount = 0;
+
+  for (const item of protocols) {
+    switch (item.protocol.type) {
+      case StreamType.Auto:
+        autoStreamCount++;
+        break;
+      case StreamType.Community:
+        communityStreamCount++;
+        break;
+      case StreamType.Both:
+        autoStreamCount++;
+        communityStreamCount++;
+        break;
+      default:
+        console.error("Unknown StreamType: ", item.protocol.type);
+    }
+  }
+
+  return { autoStreamCount, communityStreamCount };
+};

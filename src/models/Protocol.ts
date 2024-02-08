@@ -23,6 +23,8 @@ export interface IProtocol extends mongoose.Document {
   name: string;
   categories: string[];
   treasuryAddress: Address;
+  title: string;
+  description: string;
   sites: {
     website: UrlType;
     twitter: UrlType;
@@ -37,6 +39,8 @@ const ProtocolSchema = new mongoose.Schema<IProtocol>(
     name: { type: String, required: true },
     categories: { type: [String], required: true },
     treasuryAddress: { type: String, required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
     sites: {
       website: { type: String, required: true },
       twitter: { type: String, required: true },

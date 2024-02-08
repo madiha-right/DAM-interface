@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ProtocolCommunityType } from "@/actions/protocols";
+import type { IProtocolWithStat } from "@/actions/protocols";
 import { useCandidates, useToggleCandidateList } from "@/hooks/global/useCandidates";
 import DataTable from "@/app/app/DataTable";
 import { columns } from "./Columns";
@@ -9,7 +9,7 @@ import CandidatesTable from "./CandidatesTable";
 import { candidatesColumns } from "./CandidatesColumns";
 
 interface IProps {
-  protocols: ProtocolCommunityType[];
+  protocols: IProtocolWithStat[];
 }
 
 const SectionTable: React.FC<IProps> = ({ protocols }) => {

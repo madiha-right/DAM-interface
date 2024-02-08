@@ -13,14 +13,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { cn } from "@/lib/shadcn";
-import { getHeaderName, ColumnKeys } from "@/utils/table";
+import type { IProtocolWithStat } from "@/actions/protocols";
 import { useSelectedRowId } from "@/hooks/global/useSelectedRowId";
+import { getHeaderName, ColumnKeys } from "@/utils/table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table"; // prettier-ignore
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/DropdownMenu"; // prettier-ignore
 import { IconMenu } from "@/components/icons";
-import { ProtocolCommunityType } from "@/actions/protocols";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -118,12 +118,12 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
                   key={row.id}
                   className={cn(
                     from === "communityStream" &&
-                      (row.original as ProtocolCommunityType)._id === selectedRowId
+                      (row.original as IProtocolWithStat).protocol._id === selectedRowId
                       ? "bg-border hover:bg-border"
                       : "cursor-pointer",
                   )}
                   onClick={() => {
-                    setSelectedRowId((row.original as ProtocolCommunityType)._id);
+                    setSelectedRowId((row.original as IProtocolWithStat).protocol._id);
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (

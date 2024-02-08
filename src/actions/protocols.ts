@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
+import dbConnect from "@/lib/dbConnect";
+import { IStat } from "@/models/Round";
+import Protocol, { IProtocol } from "@/models/Protocol";
 import { UrlType } from "@/types";
 import { MANTLE_JOURNEY_BASE_URL } from "@/utils/site";
-import { IStat } from "@/models/Round";
-import dbConnect from "@/lib/dbConnect";
-import Protocol, { IProtocol } from "@/models/Protocol";
 
-type Stat = {
+type MantleJourneyStatType = {
   value: number;
   miles: number;
   cumulateMiles: number;
@@ -17,7 +17,7 @@ type MantleJourneyDataType = {
   _id: mongoose.Types.ObjectId;
   protocol: string; // name
   type?: string;
-  stat: Stat;
+  stat: MantleJourneyStatType;
   rank?: number;
   categories: string[];
   name: string;

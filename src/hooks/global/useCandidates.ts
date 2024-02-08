@@ -1,7 +1,14 @@
 import { atom, useAtom } from "jotai";
-import type { ProtocolCommunityType } from "@/actions/protocols";
+import { IProtocolWithStat } from "@/actions/protocols";
 
-const candidatesAtom = atom<ProtocolCommunityType[] | []>([]);
+export interface ICandidate extends IProtocolWithStat {
+  power: {
+    ballot: number;
+    weight: number;
+  };
+}
+
+const candidatesAtom = atom<ICandidate[] | []>([]);
 const toggleCandidateListAtom = atom<boolean>(false);
 
 export const useCandidates = () => {
