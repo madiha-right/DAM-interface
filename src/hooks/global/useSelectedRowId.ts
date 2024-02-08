@@ -1,6 +1,7 @@
 import { atom, useAtom } from "jotai";
+import mongoose from "mongoose";
 
-const selectedRowIdAtom = atom<string | null>(null);
+const selectedRowIdAtom = atom<mongoose.Types.ObjectId | string | null>(null);
 
 export const useSelectedRowId = () => {
   return useAtom(selectedRowIdAtom);

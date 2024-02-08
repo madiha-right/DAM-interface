@@ -1,6 +1,5 @@
 "use server";
 
-import mongoose from "mongoose";
 import { parse } from "graphql";
 import { gql, request } from "graphql-request";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
@@ -8,11 +7,13 @@ import { Address, encodeAbiParameters, hexToSignature, keccak256, parseAbiParame
 import { privateKeyToAccount } from "viem/accounts";
 import { ethereumPublicClient } from "@/lib/viem";
 import dbConnect from "@/lib/dbConnect";
-import Round, { type IProtocol, type IRound, type IStat } from "@/models/Round";
-import { getProtocolsAuto } from "@/actions/protocols";
+import Round, { type IStat, type IRoundBase } from "@/models/Round";
+import { type IProtocolWithStat, getProtocols } from "@/actions/protocols";
 import { DAM_SUBGRAPH_URL } from "@/utils/site";
+import { PERCENTAGE_FACTOR } from "@/utils/constants";
+import { StreamType } from "@/models/Protocol";
 
-type RoundType = {
+type RoundQueryType = {
   id: number;
   startTime: bigint;
   endTime: bigint;
@@ -20,7 +21,7 @@ type RoundType = {
   autoStreamRatio: number;
 };
 
-const currentRoundQuery: TypedDocumentNode<{ rounds: RoundType[] }> = parse(gql`
+const currentRoundQuery: TypedDocumentNode<{ rounds: RoundQueryType[] }> = parse(gql`
   query currentRound {
     rounds(where: { ongoing: true }) {
       id
@@ -32,10 +33,9 @@ const currentRoundQuery: TypedDocumentNode<{ rounds: RoundType[] }> = parse(gql`
   }
 `);
 
-export const getCurrentRound = async () => {
+export const queryCurrentRound = async () => {
   try {
     const res = await request(DAM_SUBGRAPH_URL, currentRoundQuery);
-    console.log("subgraph", res.rounds);
     const data = res.rounds[0];
 
     return data;
@@ -44,59 +44,126 @@ export const getCurrentRound = async () => {
   }
 };
 
-export const startRound = async () => {
+interface ICurrentRound extends IRoundBase {
+  protocols: IProtocolWithStat[];
+  startTime: bigint;
+  endTime: bigint;
+  autoStreamRatio: number;
+  reinvestmentRatio: number;
+}
+
+export const getRound = async (roundId: number): Promise<IProtocolWithStat[]> => {
+  try {
+    await dbConnect();
+
+    const round = await Round.findOne({ roundId }).populate("protocols.protocol");
+
+    if (!round) {
+      throw new Error("No round found");
+    }
+
+    // NOTE: to get startTime, endTime, autoStreamRatio, reinvestmentRatio, add subgraph query by roundId
+    return round.protocols;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+/**
+ * TODO:
+ * 5. update ui using getRound
+ * 6. add routes to add protocol to db - add both protocols and round(protocol ids)
+ * 6. empty db and test it on ui
+ */
+export const startRound = async (): Promise<ICurrentRound | undefined> => {
   try {
     const blockNumber = await ethereumPublicClient.getBlockNumber();
     const snapshotBlockNumber = blockNumber - BigInt(1);
-    const protocolsAuto = await getProtocolsAuto();
-    const currentRound = await getCurrentRound();
+    const currentRound = await queryCurrentRound();
+    const protocols = await getProtocols();
+    const protocolIdsWithStat = protocols.map((item) => ({
+      id: item.protocol._id,
+      stat: {
+        ...item.stat,
+        miles: {
+          ...item.stat.miles,
+          start: item.stat.miles.today,
+          accumulatedStart: item.stat.miles.accumulated,
+        },
+      },
+    }));
 
-    if (protocolsAuto.length === 0) {
-      throw new Error("No protocols found");
-    }
     if (!currentRound) {
       throw new Error("No current round found");
     }
-
-    const protocols = protocolsAuto.map(
-      (protocol): IProtocol => ({
-        _id: protocol._id as unknown as mongoose.Types.ObjectId,
-        name: protocol.name,
-        categories: protocol.categories,
-        website: protocol.website,
-        stat: {
-          milesOnStart: protocol.stat.milesToday,
-          milesAccumulatedOnStart: protocol.stat.milesAccumulated,
-        },
-      }),
-    );
 
     await dbConnect();
 
     const round = await Round.create({
       roundId: currentRound.id,
       snapshot: snapshotBlockNumber,
-      protocols: protocols,
+      totalVotes: BigInt(0),
+      protocols: protocolIdsWithStat,
     });
 
-    return round;
+    await round.save();
+
+    return {
+      ...round,
+      startTime: currentRound.startTime,
+      endTime: currentRound.endTime,
+      autoStreamRatio: currentRound.autoStreamRatio,
+      reinvestmentRatio: currentRound.reinvestmentRatio,
+    };
   } catch (error) {
     console.error(error);
   }
 };
 
-// TODO: auto <> community ratio
 export const fetchEndRoundData = async () => {
   try {
-    const currentRound = await getCurrentRound();
+    const currentRound = await queryCurrentRound();
     const oracle = privateKeyToAccount(process.env.ORACLE_PRIVATE_KEY);
 
     if (!currentRound) {
       throw new Error("No current round found from subgraph");
     }
 
-    const round = await insertMilesOnEnd(currentRound.id);
-    const data = calcDistributions(round.protocols);
+    const protocols = await getProtocols();
+    const protocolIdsWithStat = protocols.map((item) => ({
+      id: item.protocol._id,
+      stat: {
+        ...item.stat,
+        miles: {
+          ...item.stat.miles,
+          end: item.stat.miles.today,
+          accumulatedEnd: item.stat.miles.accumulated,
+        },
+      },
+    }));
+
+    await dbConnect();
+
+    const updatedRound = await Round.findOneAndUpdate(
+      { roundId: currentRound.id },
+      { $set: { protocols: protocolIdsWithStat } },
+      { new: true },
+    ).populate("protocols.protocol");
+
+    if (!updatedRound) {
+      throw new Error("Failed to update round");
+    }
+
+    const { receivers, proportions } = calcDistributions({
+      ...updatedRound,
+      autoStreamRatio: currentRound.autoStreamRatio,
+      reinvestmentRatio: currentRound.reinvestmentRatio,
+    });
+    const data = encodeAbiParameters(parseAbiParameters("address[], uint16[]"), [
+      receivers,
+      proportions,
+    ]);
 
     // const receivers: Address[] = ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"];
     // const proportions: number[] = [10000];
@@ -104,96 +171,85 @@ export const fetchEndRoundData = async () => {
     //   receivers,
     //   proportions,
     // ]);
+
     const hexSignature = await oracle.signMessage({ message: { raw: keccak256(data) } });
     const signature = hexToSignature(hexSignature);
 
-    return {
-      signature,
-      data,
-    };
+    return { signature, data };
   } catch (error) {
     console.error(error);
   }
 };
 
-const insertMilesOnEnd = async (roundId: number): Promise<IRound> => {
-  const protocolsAuto = await getProtocolsAuto();
-
-  await dbConnect();
-
-  const round = await Round.findOne({ roundId });
-
-  if (!round) {
-    throw new Error("No round found");
-  }
-
-  const combined: Record<string, IProtocol> = {};
-
-  for (const item of round.protocols) {
-    combined[item._id.toString()] = item;
-  }
-
-  for (const item of protocolsAuto) {
-    if (combined[item._id.toString()]) {
-      combined[item._id.toString()].stat.milesOnEnd = item.stat.milesToday;
-      combined[item._id.toString()].stat.milesAccumulatedOnEnd = item.stat.milesAccumulated;
-    }
-  }
-
-  const protocols = Object.values(combined);
-
-  const updatedRound = await Round.findOneAndUpdate(
-    { roundId },
-    { $set: { protocols: protocols } },
-    { new: true },
-  );
-
-  if (!updatedRound) {
-    throw new Error("Failed to update round");
-  }
-
-  return updatedRound;
-};
-
-// TODO: auto <> community ratio
-const calcDistributions = (protocols: IProtocol[]) => {
-  const receivers: Address[] = [];
-  const proportions: number[] = [];
+const calcDistributions = (round: ICurrentRound) => {
+  const combined: Record<Address, number> = {};
+  const totalIncentive = PERCENTAGE_FACTOR - round.reinvestmentRatio;
 
   let totalPoints = 0;
-  let leftProportion = 10000;
+  let leftProportionsAuto = (totalIncentive * round.autoStreamRatio) / PERCENTAGE_FACTOR;
 
-  const protocolsWithPoints = protocols
-    .filter((item) => item.treasuryAddress)
+  const protocolsAuto = round.protocols
+    .filter(
+      (item) =>
+        (item.protocol.type === StreamType.Auto || item.protocol.type === StreamType.Both) &&
+        (item.stat.miles.start || 0) > 0 &&
+        (item.stat.miles.accumulatedStart || 0) > 0,
+    )
     .map((item) => {
       const points = calcPoints(item.stat);
       totalPoints += points;
 
-      return {
-        ...item,
-        points,
-      };
+      return { ...item, stat: { ...item.stat, points } };
     });
 
-  for (let i = 0; i < protocolsWithPoints.length; i++) {
-    const protocol = protocolsWithPoints[i];
-    const isLast = i === protocolsWithPoints.length - 1;
-    const proportion = isLast ? leftProportion : Math.floor(protocol.points / totalPoints) * 10000;
+  for (let i = 0; i < protocolsAuto.length; i++) {
+    const item = protocolsAuto[i];
+    const isLast = i === protocolsAuto.length - 1;
+    const proportion = isLast
+      ? leftProportionsAuto
+      : Math.floor((item.stat.points / totalPoints) * PERCENTAGE_FACTOR);
 
-    receivers.push(protocol.treasuryAddress!);
-    proportions.push(proportion);
-
-    leftProportion -= proportion;
+    combined[item.protocol.treasuryAddress] = proportion;
+    leftProportionsAuto -= proportion;
   }
 
-  return keccak256(
-    encodeAbiParameters(parseAbiParameters("address[], uint16[]"), [receivers, proportions]),
+  let leftProportionsCommunity = totalIncentive - leftProportionsAuto;
+
+  const protocolsCommunity = round.protocols.filter(
+    (item) =>
+      (item.protocol.type === StreamType.Community || item.protocol.type === StreamType.Both) &&
+      (item.stat.votes?.total || 0) > 0,
   );
+
+  for (let i = 0; i < protocolsCommunity.length; i++) {
+    const item = protocolsCommunity[i];
+    const isLast = i === protocolsCommunity.length - 1;
+    const proportion = isLast
+      ? leftProportionsCommunity
+      : Math.floor(
+          Number((item.stat.votes?.total || BigInt(0)) / round.totalVotes) * PERCENTAGE_FACTOR,
+        );
+
+    combined[item.protocol.treasuryAddress]
+      ? (combined[item.protocol.treasuryAddress] += proportion)
+      : (combined[item.protocol.treasuryAddress] = proportion);
+    leftProportionsCommunity -= proportion;
+  }
+
+  const receivers: Address[] = Object.keys(combined) as Address[];
+  const proportions: number[] = Object.values(combined);
+
+  return { receivers, proportions };
 };
 
 const calcPoints = (stat: IStat) => {
-  const drgr = ((stat.milesOnEnd as number) / stat.milesOnStart) * 10;
-  const aagr = ((stat.milesAccumulatedOnEnd as number) / stat.milesAccumulatedOnStart) * 10;
+  if (!stat.miles?.start || !stat.miles?.accumulatedStart) {
+    return 0;
+  }
+
+  const drgr = ((stat.miles?.end as number) / (stat.miles?.start as number)) * 10;
+  const aagr =
+    ((stat.miles?.accumulatedEnd as number) / (stat.miles?.accumulatedStart as number)) * 10;
 
   return drgr + aagr;
 };

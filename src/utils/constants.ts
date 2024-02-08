@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import type { Address } from "viem";
 
 export enum ModelNames {
-  // eslint-disable-next-line no-unused-vars
   Round = "Round",
+  CommunityStream = "CommunityStream",
+  Protocol = "Protocol",
 }
 
 type ContractAddresses = {
@@ -48,11 +50,11 @@ export const TOAST_SUCCESS: ToastType = {
   description: "Your request was successful.",
 };
 
-export const DEADLINE = 1;
-
-export const DEFAULT_DATE_FORMAT = "MMM DD";
-
 export const PRECISION = {
   short: 2,
   long: 5,
 };
+
+export const DEADLINE = 1;
+export const DEFAULT_DATE_FORMAT = "MMM DD";
+export const PERCENTAGE_FACTOR = 10000;

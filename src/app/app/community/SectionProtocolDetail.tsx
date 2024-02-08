@@ -19,10 +19,10 @@ const SectionProtocolDetail: React.FC<IProps> = ({ protocols }) => {
   const [candidates, setCandidates] = useCandidates();
   const [isOpenCandidateList] = useToggleCandidateList();
   const { toast, dismiss } = useToast();
-  const selectedProtocol = protocols.find((protocol) => protocol.id === selectedRowId);
+  const selectedProtocol = protocols.find((protocol) => protocol._id === selectedRowId);
 
   const totalProportions = candidates.reduce(
-    (acc, candidate) => acc + (candidate.voteProportion || 0),
+    (acc, candidate) => acc + (candidate.vote.proportion || 0),
     0,
   );
 
@@ -30,12 +30,15 @@ const SectionProtocolDetail: React.FC<IProps> = ({ protocols }) => {
     if (!selectedProtocol || candidates.length === 0) {
       return false;
     }
-    return candidates.some((candidate) => candidate.id === selectedProtocol.id);
+    return candidates.some((candidate) => candidate._id === selectedProtocol._id);
   };
 
   const resetVotes = () => {
     setCandidates((candidates) =>
-      candidates.map((candidate) => ({ ...candidate, voteProportion: 0, voteWeight: 0 })),
+      candidates.map((candidate) => ({
+        ...candidate,
+        vote: { ...candidate.vote, proportion: 0, weight: 0 },
+      })),
     );
   };
 

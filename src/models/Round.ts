@@ -1,37 +1,42 @@
 import mongoose from "mongoose";
-import { Address } from "viem";
-import type { UrlType } from "@/types";
 import { ModelNames } from "@/utils/constants";
 
 export interface IStat {
-  milesOnStart: number;
-  milesAccumulatedOnStart: number;
-  milesOnEnd?: number;
-  milesAccumulatedOnEnd?: number;
+  miles?: {
+    start: number;
+    end: number;
+    accumulatedStart: number;
+    accumulatedEnd: number;
+  };
+  votes?: {
+    total: bigint;
+    bit: bigint;
+    mnt: bigint;
+    l2Mnt: bigint;
+  };
 }
 
-// TODO: seperate auto and community?
-export interface IProtocol {
-  _id: mongoose.Types.ObjectId;
-  name: string;
-  categories: string[];
-  treasuryAddress?: Address;
-  website: UrlType;
+interface IProtocolWithStat {
   stat: IStat;
+  protocol: mongoose.Types.ObjectId;
 }
 
-export interface IRound extends mongoose.Document {
+export interface IRoundBase extends mongoose.Document {
   _id: mongoose.Types.ObjectId;
-  round_id: number;
+  roundId: number;
   snapshot: bigint;
-  protocols: IProtocol[];
+  totalVotes: bigint;
   created_at: Date;
   updated_at: Date;
 }
 
+interface IRound extends IRoundBase {
+  protocols: IProtocolWithStat[];
+}
+
 const RoundSchema = new mongoose.Schema<IRound>(
   {
-    round_id: {
+    roundId: {
       type: Number,
       required: true,
       min: 1,
@@ -40,22 +45,49 @@ const RoundSchema = new mongoose.Schema<IRound>(
       type: BigInt,
       required: true,
     },
+    totalVotes: {
+      type: BigInt,
+      required: true,
+    },
     protocols: {
       type: [
         {
-          name: { type: String, required: true },
-          categories: { type: [String], required: true },
-          treasuryAddress: { type: String },
-          website: { type: String, required: true },
+          protocol: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: ModelNames.Protocol,
+            required: true,
+          },
           stat: {
-            milesOnStart: { type: Number, required: true },
-            milesAccumulatedOnStart: { type: Number, required: true },
-            milesOnEnd: Number,
-            milesAccumulatedOnEnd: Number,
+            miles: {
+              onStart: {
+                type: Number,
+                required: true,
+              },
+              onEnd: {
+                type: Number,
+                required: true,
+              },
+              accumulatedOnStart: {
+                type: Number,
+                required: true,
+              },
+              accumulatedOnEnd: {
+                type: Number,
+                required: true,
+              },
+            },
+            votes: {
+              total: {
+                type: BigInt,
+                required: true,
+              },
+              bit: BigInt,
+              mnt: BigInt,
+              l2Mnt: BigInt,
+            },
           },
         },
       ],
-      required: true,
     },
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } },

@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import type { Metadata } from "next";
-import { getProtocolsAuto } from "@/actions/protocols";
+import { getRound, queryCurrentRound } from "@/actions/rounds";
 import { columns } from "./Columns";
 import DataTable from "../DataTable";
 
@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 };
 
 const AutomaticPage: NextPage = async () => {
-  const protocols = await getProtocolsAuto();
+  const currentRound = await queryCurrentRound();
+  const protocols = await getRound(currentRound?.id as number);
 
   return (
     <>

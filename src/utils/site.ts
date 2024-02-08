@@ -28,9 +28,11 @@ const DAM_SUBGRAPH_BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:8000"
     : "https://subgraph-api.mantle.xyz";
-export const DAM_SUBGRAPH_URL = `${DAM_SUBGRAPH_BASE_URL}/subgraphs/name/test`;
+export const DAM_SUBGRAPH_URL = `${DAM_SUBGRAPH_BASE_URL}/subgraphs/name/test`; // TODO: change url
 
 export const MANTLE_JOURNEY_BASE_URL = "https://mdi-quests-api-production.up.railway.app";
 
 export const MANTLE_RPC_URL =
   process.env.NODE_ENV === "development" ? "http://localhost:8545" : "https://rpc.mantle.xyz";
+
+export const DELEGATEVOTE_SUBGRAPH_URL = "https://api.delegatevote.mantle.xyz/";

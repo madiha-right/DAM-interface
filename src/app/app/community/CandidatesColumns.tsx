@@ -20,6 +20,7 @@ export const candidatesColumns: ColumnDef<ProtocolCommunityType>[] = [
   },
   {
     accessorKey: ColumnKeys.ReceivedWeight,
+    accessorFn: (row) => row.vote.weight,
     header: getHeaderName(ColumnKeys.ReceivedWeight),
     cell: ({ row }) => {
       const weight = parseFloat(row.getValue(ColumnKeys.ReceivedWeight));
@@ -29,6 +30,7 @@ export const candidatesColumns: ColumnDef<ProtocolCommunityType>[] = [
   },
   {
     accessorKey: ColumnKeys.VoteProportion,
+    accessorFn: (row) => row.vote.proportion,
     header: getHeaderName(ColumnKeys.VoteProportion),
     cell: ({ row }) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -51,24 +53,23 @@ export const candidatesColumns: ColumnDef<ProtocolCommunityType>[] = [
 
         setCandidates((candidates) => {
           const totalProportions = candidates.reduce(
-            (acc, candidate) => acc + (candidate.voteProportion || 0),
+            (acc, candidate) => acc + (candidate.vote.proportion || 0),
             0,
           );
 
           const newCandidates = candidates.map((candidate) => {
             if (candidate.name === row.getValue(ColumnKeys.Name)) {
-              const newProportion = (candidate.voteProportion || 0) + num;
+              const newProportion = (candidate.vote.proportion || 0) + num;
               const newWeight = newProportion / (totalProportions + num);
 
               return {
                 ...candidate,
-                voteProportion: newProportion,
-                voteWeight: newWeight,
+                vote: { ...candidate.vote, proportion: newProportion, weight: newWeight },
               };
             }
 
-            const newWeight = (candidate.voteProportion || 0) / (totalProportions + num);
-            return { ...candidate, voteWeight: newWeight };
+            const newWeight = (candidate.vote.proportion || 0) / (totalProportions + num);
+            return { ...candidate, vote: { ...candidate.vote, weight: newWeight } };
           });
 
           return newCandidates;

@@ -13,7 +13,7 @@ export const chain = process.env.NODE_ENV === "development" ? foundry : mantle;
 
 export const ethereumPublicClient = createPublicClient({
   chain: mainnet, // use mainnet to get block number of mainnet. this block number is used for mantle api voting
-  transport: http(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`),
+  transport: http(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_ID}`),
 });
 
 const localClient = createTestClient({

@@ -1,7 +1,7 @@
 import Dam from "@/abis/Dam.json";
 import { privateKeyToAccount } from "viem/accounts";
 import { oracleWalletClient, publicClient } from "@/lib/viem";
-import { fetchEndRoundData } from "@/actions/rounds";
+import { fetchEndRoundData, startRound } from "@/actions/rounds";
 import { CONTRACT_ADDRESSES } from "@/utils/constants";
 
 export async function GET() {
@@ -39,6 +39,8 @@ const endRound = async () => {
     if (tx.status === "reverted") {
       throw new Error("Transaction reverted");
     }
+
+    await startRound();
 
     return {
       hash: tx.transactionHash,

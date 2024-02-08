@@ -35,13 +35,9 @@ export const columns: ColumnDef<ProtocolAutoType>[] = [
   },
   {
     accessorKey: ColumnKeys.TxCount,
-    accessorFn: (row) => {
-      // console.log("tx count", row.stat);
-      return row.stat.txCount;
-    },
+    accessorFn: (row) => row.stat.txCount,
     header: getHeaderName(ColumnKeys.TxCount),
     cell: ({ row }) => {
-      // console.log(row.getValue(ColumnKeys.TxCount));
       const txCount = parseFloat(row.getValue(ColumnKeys.TxCount));
       const formatted = formatCount(txCount);
 

@@ -24,6 +24,7 @@ export const columns: ColumnDef<ProtocolCommunityType>[] = [
   },
   {
     accessorKey: ColumnKeys.ReceivedWeight,
+    accessorFn: (row) => row.vote.received,
     header: ({ column }) => {
       return (
         <Button
@@ -39,9 +40,9 @@ export const columns: ColumnDef<ProtocolCommunityType>[] = [
       );
     },
     cell: ({ row }) => {
-      const weight = parseFloat(row.getValue(ColumnKeys.ReceivedWeight));
+      const received = parseFloat(row.getValue(ColumnKeys.ReceivedWeight));
 
-      return <span>{formatPercentage(weight)}</span>;
+      return <span>{formatPercentage(received)}</span>;
     },
   },
 ];

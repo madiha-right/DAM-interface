@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/DropdownMenu"; // prettier-ignore
 import { IconMenu } from "@/components/icons";
+import { ProtocolCommunityType } from "@/actions/protocols";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -116,11 +117,14 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
                 <TableRow
                   key={row.id}
                   className={cn(
-                    from === "communityStream" && row.id === selectedRowId
+                    from === "communityStream" &&
+                      (row.original as ProtocolCommunityType)._id === selectedRowId
                       ? "bg-border hover:bg-border"
                       : "cursor-pointer",
                   )}
-                  onClick={() => setSelectedRowId(row.id)}
+                  onClick={() => {
+                    setSelectedRowId((row.original as ProtocolCommunityType)._id);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="h-[56px] px-[30px] text-sm font-medium">

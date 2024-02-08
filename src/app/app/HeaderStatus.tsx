@@ -1,14 +1,14 @@
 import React from "react";
-import { getCurrentRound } from "@/actions/rounds";
-import { getProtocolsAuto } from "@/actions/protocols";
+import { queryCurrentRound } from "@/actions/rounds";
+import { getAutoStreamProtocols } from "@/actions/protocols";
 import { formatTimestamp } from "@/utils/times";
 import HeaderStatusList from "./HeaderStatusList";
 
 interface IProps {}
 
 const HeaderStatus: React.FC<IProps> = async () => {
-  const round = await getCurrentRound();
-  const protocols = await getProtocolsAuto(); // TODO: there could be some projects that are only listed in the community stream
+  const round = await queryCurrentRound();
+  const protocols = await getAutoStreamProtocols(); // TODO: there could be some projects that are only listed in the community stream
   const autoStreamRatio = (round?.autoStreamRatio as number) / 100;
 
   return (
