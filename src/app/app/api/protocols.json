@@ -1,0 +1,90 @@
+[
+  {
+    "type": "both",
+    "name": "AGNI",
+    "categories": ["Defi"],
+    "treasuryAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "title": "Aave is an open source and non-custodial protocol enabling the creation of money markets.",
+    "description": "Aave is an open source and non-custodial protocol enabling the creation of money markets. Users can earn interest on deposits and borrow assets. Deposits are used to provide liquidity and borrowers can borrow in an overcollateralized (perpetually) or undercollateralized (one-block liquidity) fashion. The protocol’s objective is to provide a highly reliable and efficient infrastructure for decentralized finance. Aave is the first DeFi protocol to introduce flash loans, a type of loan that does not require collateral to borrow.",
+    "sites": {
+      "website": "https://aave.com/",
+      "twitter": "https://twitter.com/AaveAave"
+    },
+    "contributions": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ],
+    "metrics": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ]
+  },
+  {
+    "type": "auto",
+    "name": "iZUMi Finance",
+    "categories": ["Defi"],
+    "treasuryAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "title": "Aave is an open source and non-custodial protocol enabling the creation of money markets.",
+    "description": "Aave is an open source and non-custodial protocol enabling the creation of money markets. Users can earn interest on deposits and borrow assets. Deposits are used to provide liquidity and borrowers can borrow in an overcollateralized (perpetually) or undercollateralized (one-block liquidity) fashion. The protocol’s objective is to provide a highly reliable and efficient infrastructure for decentralized finance. Aave is the first DeFi protocol to introduce flash loans, a type of loan that does not require collateral to borrow.",
+    "sites": {
+      "website": "https://aave.com/",
+      "twitter": "https://twitter.com/AaveAave"
+    },
+    "contributions": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ],
+    "metrics": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ]
+  },
+  {
+    "type": "community",
+    "name": "Clipper",
+    "categories": ["Infrastructure"],
+    "treasuryAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "title": "Aave is an open source and non-custodial protocol enabling the creation of money markets.",
+    "description": "Aave is an open source and non-custodial protocol enabling the creation of money markets. Users can earn interest on deposits and borrow assets. Deposits are used to provide liquidity and borrowers can borrow in an overcollateralized (perpetually) or undercollateralized (one-block liquidity) fashion. The protocol’s objective is to provide a highly reliable and efficient infrastructure for decentralized finance. Aave is the first DeFi protocol to introduce flash loans, a type of loan that does not require collateral to borrow.",
+    "sites": {
+      "website": "https://aave.com/",
+      "twitter": "https://twitter.com/AaveAave"
+    },
+    "contributions": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ],
+    "metrics": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ]
+  },
+  {
+    "type": "both",
+    "name": "Symbiosis",
+    "categories": ["Infrastructure"],
+    "treasuryAddress": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "title": "Aave is an open source and non-custodial protocol enabling the creation of money markets.",
+    "description": "Aave is an open source and non-custodial protocol enabling the creation of money markets. Users can earn interest on deposits and borrow assets. Deposits are used to provide liquidity and borrowers can borrow in an overcollateralized (perpetually) or undercollateralized (one-block liquidity) fashion. The protocol’s objective is to provide a highly reliable and efficient infrastructure for decentralized finance. Aave is the first DeFi protocol to introduce flash loans, a type of loan that does not require collateral to borrow.",
+    "sites": {
+      "website": "https://aave.com/",
+      "twitter": "https://twitter.com/AaveAave"
+    },
+    "contributions": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ],
+    "metrics": [
+      { "title": "docs", "value": 100, "url": "https://docs.aave.com/developers/introduction" },
+      { "title": "app", "value": 10, "url": "https://app.aave.com/" },
+      { "title": "github", "value": 1, "url": "https://github.com" }
+    ]
+  }
+]

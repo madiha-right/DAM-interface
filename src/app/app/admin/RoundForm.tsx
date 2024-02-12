@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { Address, parseEther, hexToSignature } from "viem";
 import { useAccount, useBalance } from "wagmi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { startRoundClient } from "@/actions/rounds";
 import { usePermit } from "@/hooks/tx/usePermit";
 import { useOperateDamWithPermit } from "@/hooks/tx/useOperateDam";
 import { CONTRACT_ADDRESSES, DEADLINE } from "@/utils/constants";
@@ -65,7 +66,12 @@ const RoundForm: React.FC<IProps> = () => {
     deadline,
   });
 
-  const damOperationWithPermit = useOperateDamWithPermit({ onSuccess: form.reset });
+  const damOperationWithPermit = useOperateDamWithPermit({
+    onSuccess: async () => {
+      await startRoundClient();
+      form.reset();
+    },
+  });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (!balance.data) {

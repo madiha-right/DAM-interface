@@ -4,7 +4,7 @@ import { CONTRACT_ADDRESSES, TOAST_ERROR, TOAST_SUCCESS } from "@/utils/constant
 import DamAbi from "@/abis/Dam.json";
 
 type ArgsType = {
-  onSuccess?: () => void;
+  onSuccess?: () => Promise<void>;
 };
 
 export const useOperateDam = (args: ArgsType) => {
@@ -22,7 +22,8 @@ export const useOperateDam = (args: ArgsType) => {
 
   const txOperateDam = useWaitForTransaction({
     hash: writeOperateDam.data?.hash,
-    onSuccess(data) {
+    confirmations: 2,
+    onSuccess: async (data) => {
       if (data.status === "reverted") {
         console.error("Transaction reverted");
         toast(TOAST_ERROR);
@@ -59,14 +60,15 @@ export const useOperateDamWithPermit = (args: ArgsType) => {
 
   const txOperateDamWithPermit = useWaitForTransaction({
     hash: writeOperateDamWithPermit.data?.hash,
-    onSuccess(data) {
+    confirmations: 2, // set confirmations block to 2 to get some time to index event from subgraph
+    onSuccess: async (data) => {
       if (data.status === "reverted") {
         console.error("Transaction reverted");
         toast(TOAST_ERROR);
         return;
       }
+      await args.onSuccess?.();
       toast(TOAST_SUCCESS);
-      args.onSuccess?.();
     },
     onError(error) {
       console.error(error);

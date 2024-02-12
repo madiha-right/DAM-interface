@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { getCurrentRoundUpstream, getRound } from "@/actions/rounds";
 import type { IProtocolWithStat } from "@/actions/protocols";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
 import { formatPercentage } from "@/utils/format";
@@ -11,21 +10,22 @@ import ArrowUpDown from "@/components/icons/IconArrowUpDown";
 export const columns: ColumnDef<IProtocolWithStat>[] = [
   {
     accessorKey: ColumnKeys.Name,
+    accessorFn: (row) => row.protocol.name,
     header: getHeaderName(ColumnKeys.Name),
   },
   {
     accessorKey: ColumnKeys.Categories,
+    accessorFn: (row) => row.protocol.categories,
     header: getHeaderName(ColumnKeys.Categories),
     cell: ({ row }) => {
       const categories = row.getValue(ColumnKeys.Categories) as string[];
       const category = categories[0];
-
       return <span>{category}</span>;
     },
   },
   {
     accessorKey: ColumnKeys.VotesProtocol,
-    accessorFn: (row) => row.stat.votes?.total,
+    accessorFn: (row) => row.stat.votes?.weight,
     header: ({ column }) => {
       return (
         <Button
@@ -41,12 +41,7 @@ export const columns: ColumnDef<IProtocolWithStat>[] = [
       );
     },
     cell: async ({ row }) => {
-      const roundUpstream = await getCurrentRoundUpstream();
-      const round = await getRound(roundUpstream?.id as number);
-      const totalVotes = round?.totalVotes;
-      const votesProtocol = BigInt(row.getValue(ColumnKeys.VotesProtocol));
-      const weight = totalVotes ? Number(votesProtocol / totalVotes) : 0;
-
+      const weight = row.getValue(ColumnKeys.VotesProtocol) as number;
       return <span>{formatPercentage(weight)}</span>;
     },
   },

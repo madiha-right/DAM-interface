@@ -59,28 +59,13 @@ const RoundSchema = new mongoose.Schema<IRound>(
           },
           stat: {
             miles: {
-              onStart: {
-                type: Number,
-                required: true,
-              },
-              onEnd: {
-                type: Number,
-                required: true,
-              },
-              accumulatedOnStart: {
-                type: Number,
-                required: true,
-              },
-              accumulatedOnEnd: {
-                type: Number,
-                required: true,
-              },
+              start: { type: Number, required: true },
+              end: Number,
+              accumulatedStart: { type: Number, required: true },
+              accumulatedEnd: Number,
             },
             votes: {
-              total: {
-                type: BigInt,
-                required: true,
-              },
+              total: { type: BigInt, required: true },
               bit: BigInt,
               mnt: BigInt,
               l2Mnt: BigInt,

@@ -1,9 +1,13 @@
 import Dam from "@/abis/Dam.json";
 import { privateKeyToAccount } from "viem/accounts";
 import { oracleWalletClient, publicClient } from "@/lib/viem";
+import dbConnect from "@/lib/dbConnect";
+import Protocol from "@/models/Protocol";
 import { fetchEndRoundData, startRound } from "@/actions/rounds";
 import { CONTRACT_ADDRESSES } from "@/utils/constants";
+import ProtocolsList from "./protocols.json";
 
+// End round
 export async function GET() {
   let tx;
 
@@ -12,6 +16,41 @@ export async function GET() {
   }
 
   return Response.json({ data: tx });
+}
+
+// add projects to DB
+export async function POST() {
+  try {
+    await dbConnect();
+
+    const protocols = await Protocol.insertMany(ProtocolsList, { ordered: true });
+
+    // NOTE: use below code to add protocols to the current round
+    // const currentRoundUpstream = await getCurrentRoundUpstream();
+
+    // if (!currentRoundUpstream) {
+    //   throw new Error("failed to fetch current round upstream");
+    // }
+
+    // const protocolIds = protocols.map((protocol) => protocol._id);
+
+    // console.log(currentRoundUpstream.id);
+
+    // const round = await Round.findOneAndUpdate(
+    //   { round: currentRoundUpstream.id },
+    //   { $push: { protocols: protocolIds } },
+    //   { new: true },
+    // );
+
+    // if (!round) {
+    //   throw new Error("failed to update round");
+    // }
+
+    return Response.json({ data: protocols });
+  } catch (error) {
+    console.error(error);
+    return Response.json({ error });
+  }
 }
 
 const endRound = async () => {

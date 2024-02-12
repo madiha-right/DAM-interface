@@ -29,8 +29,8 @@ export interface IProtocol extends mongoose.Document {
     website: UrlType;
     twitter: UrlType;
   };
-  contributions?: AdditionalInfoType[];
-  metrics?: AdditionalInfoType[];
+  contributions: AdditionalInfoType[];
+  metrics: AdditionalInfoType[];
 }
 
 const ProtocolSchema = new mongoose.Schema<IProtocol>(
@@ -45,16 +45,20 @@ const ProtocolSchema = new mongoose.Schema<IProtocol>(
       website: { type: String, required: true },
       twitter: { type: String, required: true },
     },
-    contributions: {
-      title: { type: String, required: true },
-      value: { type: String, required: true },
-      url: { type: String, required: true },
-    },
-    metrics: {
-      title: { type: String, required: true },
-      value: { type: String, required: true },
-      url: { type: String, required: true },
-    },
+    contributions: [
+      {
+        title: { type: String, required: true },
+        value: { type: String, required: true },
+        url: { type: String, required: true },
+      },
+    ],
+    metrics: [
+      {
+        title: { type: String, required: true },
+        value: { type: String, required: true },
+        url: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } },
 );

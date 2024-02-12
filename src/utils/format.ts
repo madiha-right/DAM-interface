@@ -54,3 +54,12 @@ export const formatEtherWithPrecision = (value: bigint, precision = PRECISION.lo
     return parts[0];
   }
 };
+
+export const toObject = <T>(data: T): T => {
+  return JSON.parse(
+    JSON.stringify(
+      data,
+      (_, value) => (typeof value === "bigint" ? value.toString() : value), // return everything else unchanged
+    ),
+  );
+};

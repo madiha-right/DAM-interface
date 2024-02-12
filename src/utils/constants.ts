@@ -22,11 +22,11 @@ export const CONTRACT_ADDRESSES: ContractAddresses = {
   protocol: {
     dam:
       process.env.NODE_ENV === "development"
-        ? "0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650"
+        ? "0x18E317A7D70d8fBf8e6E893616b52390EbBdb629"
         : "0x93e407C6A2e3B8fd5BF3103c784bA819C731aAB7",
     embankment:
       process.env.NODE_ENV === "development"
-        ? "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
+        ? "0x5067457698Fd6Fa1C6964e416b3f42713513B3dD"
         : "0x53F088b44022bd85E952D8D08bc7A06e46A93928",
   },
   ybToken: MANTLE_ETH_ADDRESS,

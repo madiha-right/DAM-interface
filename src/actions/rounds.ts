@@ -51,7 +51,11 @@ interface IRound extends IRoundBase {
 export const getRound = async (roundId: number): Promise<IRound | undefined> => {
   await dbConnect();
 
-  const round = await Round.findOne({ roundId }).populate("protocols.protocol");
+  const round = await Round.findOne({ roundId });
+
+  if (!round) {
+    throw new Error("No round found");
+  }
 
   // NOTE: to get startTime, endTime, autoStreamRatio, reinvestmentRatio, add subgraph query by roundId
   return round;
@@ -72,7 +76,7 @@ export const startRound = async (): Promise<ICurrentRound | undefined> => {
     const currentRound = await getCurrentRoundUpstream();
     const protocols = await getProtocols();
     const protocolIdsWithStat = protocols.map((item) => ({
-      id: item.protocol._id,
+      protocol: item.protocol._id,
       stat: {
         ...item.stat,
         miles: {
@@ -80,6 +84,7 @@ export const startRound = async (): Promise<ICurrentRound | undefined> => {
           start: item.stat.miles.today,
           accumulatedStart: item.stat.miles.accumulated,
         },
+        votes: { total: BigInt(0) },
       },
     }));
 
@@ -108,6 +113,10 @@ export const startRound = async (): Promise<ICurrentRound | undefined> => {
   } catch (error) {
     console.error(error);
   }
+};
+
+export const startRoundClient = async () => {
+  await startRound();
 };
 
 export const fetchEndRoundData = async () => {

@@ -10,15 +10,16 @@ import ArrowUpDown from "@/components/icons/IconArrowUpDown";
 export const columns: ColumnDef<IProtocolWithStat>[] = [
   {
     accessorKey: ColumnKeys.Name,
+    accessorFn: (row) => row.protocol.name,
     header: getHeaderName(ColumnKeys.Name),
   },
   {
     accessorKey: ColumnKeys.Categories,
+    accessorFn: (row) => row.protocol.categories,
     header: getHeaderName(ColumnKeys.Categories),
     cell: ({ row }) => {
       const categories = row.getValue(ColumnKeys.Categories) as string[];
       const category = categories[0];
-
       return <span>{category}</span>;
     },
   },
@@ -29,7 +30,6 @@ export const columns: ColumnDef<IProtocolWithStat>[] = [
     cell: ({ row }) => {
       const tvl = parseFloat(row.getValue(ColumnKeys.Tvl));
       const formatted = formatNumberToDollar(tvl);
-
       return <>{formatted}</>;
     },
   },
@@ -40,7 +40,6 @@ export const columns: ColumnDef<IProtocolWithStat>[] = [
     cell: ({ row }) => {
       const txCount = parseFloat(row.getValue(ColumnKeys.TxCount));
       const formatted = formatCount(txCount);
-
       return <>{formatted}</>;
     },
   },
@@ -64,7 +63,6 @@ export const columns: ColumnDef<IProtocolWithStat>[] = [
     cell: ({ row }) => {
       const milesToday = parseFloat(row.getValue(ColumnKeys.MilesToday));
       const formatted = formatCount(milesToday);
-
       return <>{formatted}</>;
     },
   },
@@ -88,7 +86,6 @@ export const columns: ColumnDef<IProtocolWithStat>[] = [
     cell: ({ row }) => {
       const milesAccumulated = parseFloat(row.getValue(ColumnKeys.MilesAccumulated));
       const formatted = formatCount(milesAccumulated);
-
       return <>{formatted}</>;
     },
   },

@@ -12,10 +12,12 @@ import { Button } from "@/components/ui/Button";
 export const candidatesColumns: ColumnDef<ICandidate>[] = [
   {
     accessorKey: ColumnKeys.Name,
+    accessorFn: (row) => row.protocol.name,
     header: getHeaderName(ColumnKeys.Name),
   },
   {
     accessorKey: ColumnKeys.Categories,
+    accessorFn: (row) => row.protocol.categories,
     header: getHeaderName(ColumnKeys.Categories),
   },
   {
