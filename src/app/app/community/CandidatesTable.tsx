@@ -3,6 +3,7 @@
 import React from "react";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { cn } from "@/lib/shadcn";
+import type { IProtocolWithStat } from "@/actions/protocols";
 import { useSelectedRowId } from "@/hooks/global/useSelectedRowId";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table"; // prettier-ignore
 import { ColumnKeys } from "@/utils/table";
@@ -55,9 +56,11 @@ const CandidatesTable = <TData, TValue>(props: DataTableProps<TData, TValue>) =>
               <TableRow
                 key={row.id}
                 className={
-                  row.id === selectedRowId ? "bg-border hover:bg-border" : "cursor-pointer"
+                  (row.original as IProtocolWithStat).protocol._id === selectedRowId
+                    ? "bg-border hover:bg-border"
+                    : "cursor-pointer"
                 }
-                onClick={() => setSelectedRowId(row.id)}
+                onClick={() => setSelectedRowId((row.original as IProtocolWithStat).protocol._id)}
               >
                 {row.getVisibleCells().map((cell) => {
                   return (

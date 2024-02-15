@@ -36,7 +36,7 @@ export interface IProtocol extends mongoose.Document {
 const ProtocolSchema = new mongoose.Schema<IProtocol>(
   {
     type: { type: String, required: true, enum: Object.values(StreamType) },
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     categories: { type: [String], required: true },
     treasuryAddress: { type: String, required: true },
     title: { type: String, required: true },

@@ -24,7 +24,7 @@ export const columns: ColumnDef<IProtocolWithStat>[] = [
     },
   },
   {
-    accessorKey: ColumnKeys.VotesProtocol,
+    accessorKey: ColumnKeys.Received,
     accessorFn: (row) => row.stat.votes?.weight,
     header: ({ column }) => {
       return (
@@ -35,13 +35,13 @@ export const columns: ColumnDef<IProtocolWithStat>[] = [
             column.toggleSorting(column.getIsSorted() === "asc" || !column.getIsSorted())
           }
         >
-          {getHeaderName(ColumnKeys.VotesProtocol)}
+          {getHeaderName(ColumnKeys.Received)}
           <ArrowUpDown className="ml-[5px] stroke-muted-foreground transition-colors duration-150 group-hover:stroke-foreground" />
         </Button>
       );
     },
-    cell: async ({ row }) => {
-      const weight = row.getValue(ColumnKeys.VotesProtocol) as number;
+    cell: ({ row }) => {
+      const weight = row.getValue(ColumnKeys.Received) as number;
       return <span>{formatPercentage(weight)}</span>;
     },
   },

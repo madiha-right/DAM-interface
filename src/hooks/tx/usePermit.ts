@@ -57,6 +57,6 @@ export const usePermit = (args: ArgsType) => {
     isLoading: signTypedData.isLoading,
     isSuccess: signTypedData.isSuccess,
     data: signTypedData.data,
-    write: signTypedData.signTypedDataAsync,
+    writeAsync: signTypedData.signTypedDataAsync,
   };
 };

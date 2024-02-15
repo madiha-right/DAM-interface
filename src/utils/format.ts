@@ -18,8 +18,14 @@ export const formatNumberToDollar = (amount: number): string => {
   }
 };
 
-export const formatCount = (count: number): string => {
-  return count.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export const formatCount = (count?: number | string): string => {
+  if (!count) {
+    return "0";
+  }
+  if (typeof count === "number") {
+    count = count.toFixed(0);
+  }
+  return count.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 /**

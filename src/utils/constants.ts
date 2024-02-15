@@ -3,8 +3,8 @@ import type { Address } from "viem";
 
 export enum ModelNames {
   Round = "Round",
-  CommunityStream = "CommunityStream",
   Protocol = "Protocol",
+  User = "User",
 }
 
 type ContractAddresses = {
@@ -22,11 +22,11 @@ export const CONTRACT_ADDRESSES: ContractAddresses = {
   protocol: {
     dam:
       process.env.NODE_ENV === "development"
-        ? "0x18E317A7D70d8fBf8e6E893616b52390EbBdb629"
+        ? "0xc0F115A19107322cFBf1cDBC7ea011C19EbDB4F8"
         : "0x93e407C6A2e3B8fd5BF3103c784bA819C731aAB7",
     embankment:
       process.env.NODE_ENV === "development"
-        ? "0x5067457698Fd6Fa1C6964e416b3f42713513B3dD"
+        ? "0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397"
         : "0x53F088b44022bd85E952D8D08bc7A06e46A93928",
   },
   ybToken: MANTLE_ETH_ADDRESS,

@@ -12,10 +12,11 @@ import DialogVoteButton from "./DialogVoteButton";
 
 interface IProps {
   protocols: IProtocolWithStat[];
-  totalVotes?: bigint;
+  roundId: number;
+  snapshotBlockNumber: bigint;
 }
 
-const SectionProtocolDetail: React.FC<IProps> = ({ protocols, totalVotes }) => {
+const SectionProtocolDetail: React.FC<IProps> = ({ protocols, roundId, snapshotBlockNumber }) => {
   const [selectedRowId] = useSelectedRowId();
   const [candidates, setCandidates] = useCandidates();
   const [isOpenCandidateList] = useToggleCandidateList();
@@ -75,8 +76,9 @@ const SectionProtocolDetail: React.FC<IProps> = ({ protocols, totalVotes }) => {
         <div className="mt-[20px] flex gap-[20px]">
           <DialogVoteButton
             candidates={candidates}
+            roundId={roundId}
+            snapshotBlockNumber={snapshotBlockNumber}
             disabled={totalBallot === 0}
-            totalVotes={totalVotes}
           />
           <Button
             variant="outline"

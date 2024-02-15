@@ -53,9 +53,9 @@ export const getRound = async (roundId: number): Promise<IRound | undefined> => 
 
   const round = await Round.findOne({ roundId });
 
-  if (!round) {
-    throw new Error("No round found");
-  }
+  // if (!round) {
+  //   throw new Error("No round found");
+  // }
 
   // NOTE: to get startTime, endTime, autoStreamRatio, reinvestmentRatio, add subgraph query by roundId
   return round;
@@ -216,7 +216,7 @@ const calcDistributions = (round: ICurrentRound) => {
   const protocolsCommunity = round.protocols.filter(
     (item) =>
       (item.protocol.type === StreamType.Community || item.protocol.type === StreamType.Both) &&
-      (item.stat.votes?.total || 0) > 0,
+      (item.stat.votes ? BigInt(item.stat.votes.total) : BigInt(0)) > BigInt(0),
   );
 
   for (let i = 0; i < protocolsCommunity.length; i++) {
@@ -225,7 +225,10 @@ const calcDistributions = (round: ICurrentRound) => {
     const proportion = isLast
       ? leftProportionsCommunity
       : Math.floor(
-          Number((item.stat.votes?.total || BigInt(0)) / round.totalVotes) * PERCENTAGE_FACTOR,
+          Number(
+            (item.stat.votes ? BigInt(item.stat.votes.total) : BigInt(0)) /
+              BigInt(round.totalVotes),
+          ) * PERCENTAGE_FACTOR,
         );
 
     combined[item.protocol.treasuryAddress]

@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { cn } from "@/lib/shadcn";
-import { getCurrentRoundUpstream, getRound } from "@/actions/rounds";
 import { useCandidates, type ICandidate } from "@/hooks/global/useCandidates";
 import { getHeaderName, ColumnKeys } from "@/utils/table";
 import { formatPercentage } from "@/utils/format";
@@ -21,16 +20,11 @@ export const candidatesColumns: ColumnDef<ICandidate>[] = [
     header: getHeaderName(ColumnKeys.Categories),
   },
   {
-    accessorKey: ColumnKeys.VotesProtocol,
-    accessorFn: (row) => row.stat.votes?.total,
-    header: getHeaderName(ColumnKeys.VotesProtocol),
-    cell: async ({ row }) => {
-      const roundUpstream = await getCurrentRoundUpstream();
-      const round = await getRound(roundUpstream?.id as number);
-      const totalVotes = round?.totalVotes;
-      const votesProtocol = BigInt(row.getValue(ColumnKeys.VotesProtocol));
-      const weight = totalVotes ? Number(votesProtocol / totalVotes) : 0;
-
+    accessorKey: ColumnKeys.Received,
+    accessorFn: (row) => row.stat.votes?.weight,
+    header: getHeaderName(ColumnKeys.Received),
+    cell: ({ row }) => {
+      const weight = row.getValue(ColumnKeys.Received) as number;
       return <span>{formatPercentage(weight)}</span>;
     },
   },
@@ -103,10 +97,10 @@ export const candidatesColumns: ColumnDef<ICandidate>[] = [
   },
   {
     accessorKey: ColumnKeys.PowerWeight,
+    accessorFn: (row) => row.power.weight,
     header: getHeaderName(ColumnKeys.PowerWeight),
     cell: ({ row }) => {
       const weight = parseFloat(row.getValue(ColumnKeys.PowerWeight) || "0");
-
       return <span>{formatPercentage(weight)}</span>;
     },
   },

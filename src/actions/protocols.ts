@@ -67,7 +67,8 @@ export const getProtocolsWithStat = async (roundId: number): Promise<IProtocolWi
   const round = await Round.findOne({ roundId }).populate("protocols.protocol");
 
   if (!round) {
-    throw new Error("No round found");
+    return [];
+    // throw new Error("No round found");
   }
 
   return mergeDataWithStat(round.protocols, txn, tvl);

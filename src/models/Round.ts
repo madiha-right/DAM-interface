@@ -9,10 +9,10 @@ export interface IStat {
     accumulatedEnd: number;
   };
   votes?: {
-    total: bigint;
-    bit: bigint;
-    mnt: bigint;
-    l2Mnt: bigint;
+    total: string;
+    bit: string;
+    mnt: string;
+    l2Mnt: string;
   };
 }
 
@@ -25,12 +25,12 @@ export interface IRoundBase extends mongoose.Document {
   _id: mongoose.Types.ObjectId;
   roundId: number;
   snapshot: bigint;
-  totalVotes: bigint;
+  totalVotes: string;
   created_at: Date;
   updated_at: Date;
 }
 
-interface IRound extends IRoundBase {
+export interface IRound extends IRoundBase {
   protocols: IProtocolWithStat[];
 }
 
@@ -39,6 +39,7 @@ const RoundSchema = new mongoose.Schema<IRound>(
     roundId: {
       type: Number,
       required: true,
+      unique: true,
       min: 1,
     },
     snapshot: {
@@ -46,7 +47,7 @@ const RoundSchema = new mongoose.Schema<IRound>(
       required: true,
     },
     totalVotes: {
-      type: BigInt,
+      type: String,
       required: true,
     },
     protocols: {
@@ -65,10 +66,10 @@ const RoundSchema = new mongoose.Schema<IRound>(
               accumulatedEnd: Number,
             },
             votes: {
-              total: { type: BigInt, required: true },
-              bit: BigInt,
-              mnt: BigInt,
-              l2Mnt: BigInt,
+              total: { type: String, required: true },
+              bit: String,
+              mnt: String,
+              l2Mnt: String,
             },
           },
         },

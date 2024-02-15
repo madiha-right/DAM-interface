@@ -105,7 +105,7 @@ const RoundForm: React.FC<IProps> = () => {
   };
 
   const handleClickApprove = () => {
-    approval.write();
+    approval.writeAsync();
   };
 
   const isApprovalDisabled = () => {
